@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: taza-bazar
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: OWNER_PHONE
+        value: 01629518850
+      - key: OWNER_EMAIL
+        value: hafezyeasin93@gmail.com

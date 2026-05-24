@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="তাজা বাজার - রুপালি আম অর্ডার করুন। টাটকা আম সরাসরি বাগান থেকে।">
+  <meta name="theme-color" content="#f97316">
+  <title>অর্ডার করুন | তাজা বাজার</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥭</text></svg>">
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="navbar-brand">
+      <div class="logo-icon">🥭</div>
+      তাজা বাজার
+    </a>
+    <div class="navbar-links">
+      <a href="/" class="nav-link-admin">হোম</a>
+      <a href="/admin" class="nav-link-admin">অ্যাডমিন</a>
+    </div>
+  </nav>
+
+  <section class="order-section">
+    <div class="container">
+      <h1 class="section-title" style="text-align: left;">🛒 অর্ডার ফর্ম</h1>
+      <p class="section-subtitle" style="text-align: left;">নিচের ফর্মটি পূরণ করে অর্ডার কনফার্ম করুন</p>
+
+      <form id="orderForm" class="order-form" novalidate>
+        <div style="background: var(--mango-light); border-radius: var(--radius); padding: 16px; margin-bottom: 24px; display: flex; align-items: center; gap: 12px;">
+          <span style="font-size: 40px;">🥭</span>
+          <div>
+            <div style="font-weight: 800; font-size: 18px;" id="formProductName">রুপালি আম</div>
+            <div style="color: var(--green-dark); font-weight: 700;">
+              <span id="formPrice">১২০</span> টাকা/কেজি
+            </div>
+            <div id="formStockStatus" style="font-size: 12px; color: var(--green-mid);">✅ স্টকে আছে</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="customerName">আপনার নাম <span class="required">*</span></label>
+          <input type="text" id="customerName" class="form-input" placeholder="আপনার পূর্ণ নাম লিখুন" required>
+          <div class="error-msg" id="nameError">অনুগ্রহ করে আপনার নাম লিখুন।</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="phone">ফোন নম্বর <span class="required">*</span></label>
+          <input type="tel" id="phone" class="form-input" placeholder="উদা: ০১৭১২৩৪৫৬৭৮" required>
+          <div class="error-msg" id="phoneError">অনুগ্রহ করে একটি বৈধ বাংলাদেশী ফোন নম্বর লিখুন।</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="email">ইমেইল (ঐচ্ছিক)</label>
+          <input type="email" id="email" class="form-input" placeholder="example@gmail.com">
+          <div class="error-msg" id="emailError">অনুগ্রহ করে একটি বৈধ ইমেইল ঠিকানা লিখুন।</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="address">ডেলিভারি ঠিকানা <span class="required">*</span></label>
+          <textarea id="address" class="form-textarea" placeholder="বিস্তারিত ঠিকানা লিখুন (যেমন: বাড়ি নং, রাস্তা, এলাকা, থানা, জেলা)" required></textarea>
+          <div class="error-msg" id="addressError">অনুগ্রহ করে আপনার ঠিকানা লিখুন।</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="quantity">পরিমাণ (কেজি) <span class="required">*</span></label>
+          <input type="number" id="quantity" class="form-input" placeholder="কত কেজি অর্ডার করতে চান?" min="1" max="50" step="1" required>
+          <div class="error-msg" id="quantityError">অনুগ্রহ করে ১-৫০ কেজির মধ্যে পরিমাণ লিখুন।</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="paymentMethod">পেমেন্ট পদ্ধতি</label>
+          <select id="paymentMethod" class="form-select">
+            <option value="cod">ক্যাশ অন ডেলিভারি (হাতে পেয়ে টাকা দিন)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="note">বিশেষ নোট (ঐচ্ছিক)</label>
+          <textarea id="note" class="form-textarea" placeholder="কোনো বিশেষ অনুরোধ থাকলে লিখুন..."></textarea>
+        </div>
+
+        <div class="order-summary" id="orderSummary">
+          <h4>📋 অর্ডার সামারি</h4>
+          <div class="summary-row">
+            <span>রুপালি আম</span>
+            <span><span id="summaryQty">-</span> কেজি</span>
+          </div>
+          <div class="summary-row">
+            <span>মূল্য/কেজি</span>
+            <span><span id="summaryPrice">-</span> টাকা</span>
+          </div>
+          <div class="summary-row total">
+            <span>মোট মূল্য</span>
+            <span id="summaryTotal">- টাকা</span>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block btn-lg" id="submitBtn">
+          <span id="submitText">✅ অর্ডার কনফার্ম করুন</span>
+          <span id="submitSpinner" class="spinner hidden"></span>
+        </button>
+
+        <p style="text-align: center; margin-top: 12px; font-size: 13px; color: var(--gray-500);">
+          অর্ডার কনফার্ম করার পর আমাদের পক্ষ থেকে আপনার ফোনে যোগাযোগ করা হবে।
+        </p>
+      </form>
+
+      <div id="successView" class="success-container hidden">
+        <div class="success-icon">✅</div>
+        <h2 class="success-title">অর্ডার সফল হয়েছে!</h2>
+        <p class="success-msg">আপনার অর্ডার গ্রহণ করা হয়েছে। শীঘ্রই আমাদের পক্ষ থেকে ফোনে যোগাযোগ করা হবে।</p>
+        <div class="success-order-id" id="successOrderId">অর্ডার #--</div>
+        <button onclick="resetForm()" class="btn btn-outline" style="margin-right: 8px;">নতুন অর্ডার</button>
+        <a href="/" class="btn btn-primary">হোমে যান</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="toast" id="toast"></div>
+
+  <footer class="footer">
+    <div class="footer-brand">🥭 তাজা বাজার</div>
+    <p>যোগাযোগ: <a href="tel:01629518850">০১৬২৯৫১৮৮৫০</a></p>
+  </footer>
+
+  <script src="js/order.js"></script>
+</body>
+</html>
