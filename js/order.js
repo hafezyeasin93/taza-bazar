@@ -3,7 +3,9 @@ var STATE = {
   pricePerKg: 120,
   minOrder: 1,
   maxOrder: 50,
-  stockAvailable: true
+  stockAvailable: true,
+  bKashNumber: '01891548610',
+  nagadNumber: '01629518850'
 };
 
 var orderForm = document.getElementById('orderForm');
@@ -14,7 +16,11 @@ var submitText = document.getElementById('submitText');
 var submitSpinner = document.getElementById('submitSpinner');
 var quantityInput = document.getElementById('quantity');
 var paymentMethodInput = document.getElementById('paymentMethod');
-var bkashPaymentBox = document.getElementById('bkashPaymentBox');
+var manualPaymentBox = document.getElementById('manualPaymentBox');
+var paymentBoxTitle = document.getElementById('paymentBoxTitle');
+var paymentProviderLabel = document.getElementById('paymentProviderLabel');
+var paymentNumber = document.getElementById('paymentNumber');
+var paymentInstructions = document.getElementById('paymentInstructions');
 var transactionInput = document.getElementById('transactionId');
 
 async function loadProduct() {
@@ -24,7 +30,8 @@ async function loadProduct() {
       var site = await res.json();
       var product = site.product || site;
       STATE.product = product;
-      if (site.bKashNumber && document.getElementById('bkashNumber')) { document.getElementById('bkashNumber').textContent = site.bKashNumber; }
+      STATE.bKashNumber = site.bKashNumber || STATE.bKashNumber;
+      STATE.nagadNumber = site.nagadNumber || STATE.nagadNumber;
       STATE.pricePerKg = product.pricePerKg;
       STATE.minOrder = product.minOrderKg || 1;
       STATE.maxOrder = product.maxOrderKg || 50;
@@ -46,6 +53,7 @@ async function loadProduct() {
         submitBtn.style.opacity = '0.5';
       }
       updateSummary();
+      togglePaymentBox();
     }
   } catch(e) {
     console.log('Using default product data');
@@ -66,12 +74,32 @@ function updateSummary() {
 
 quantityInput.addEventListener('input', updateSummary);
 
+function selectedPaymentName(method) {
+  if (method === 'bkash') return 'bKash';
+  if (method === 'nagad') return 'Nagad';
+  return '';
+}
+
+function selectedPaymentNumber(method) {
+  if (method === 'bkash') return STATE.bKashNumber;
+  if (method === 'nagad') return STATE.nagadNumber;
+  return '-';
+}
+
 function togglePaymentBox() {
-  if (!paymentMethodInput || !bkashPaymentBox) return;
-  if (paymentMethodInput.value === 'bkash') {
-    bkashPaymentBox.classList.remove('hidden');
+  if (!paymentMethodInput || !manualPaymentBox) return;
+  var method = paymentMethodInput.value;
+  var name = selectedPaymentName(method);
+  if (method === 'bkash' || method === 'nagad') {
+    manualPaymentBox.classList.remove('hidden');
+    manualPaymentBox.classList.toggle('nagad-payment-box', method === 'nagad');
+    if (paymentBoxTitle) paymentBoxTitle.textContent = name + ' Payment';
+    if (paymentProviderLabel) paymentProviderLabel.textContent = name + ' Personal Number';
+    if (paymentNumber) paymentNumber.textContent = selectedPaymentNumber(method);
+    if (paymentInstructions) paymentInstructions.textContent = selectedPaymentNumber(method) + ' নম্বরে Send Money করুন এবং Txnid দিন';
   } else {
-    bkashPaymentBox.classList.add('hidden');
+    manualPaymentBox.classList.add('hidden');
+    manualPaymentBox.classList.remove('nagad-payment-box');
     if (transactionInput) transactionInput.value = '';
   }
 }
@@ -115,8 +143,13 @@ function validateForm() {
   if (!address || address.length < 5) { showError('address', 'addressError'); isValid = false; }
   var qty = parseInt(quantityInput.value);
   if (isNaN(qty) || qty < STATE.minOrder || qty > STATE.maxOrder) { showError('quantity', 'quantityError'); isValid = false; }
-  var paymentMethod = paymentMethodInput ? paymentMethodInput.value : 'cod';
-  if (paymentMethod === 'bkash') {
+  var paymentMethod = paymentMethodInput ? paymentMethodInput.value : '';
+  if (paymentMethod !== 'bkash' && paymentMethod !== 'nagad') {
+    showError('paymentMethod', 'paymentError');
+    showToast('পেমেন্ট পদ্ধতি হিসেবে bKash অথবা Nagad নির্বাচন করুন।', 'error');
+    isValid = false;
+  }
+  if (paymentMethod === 'bkash' || paymentMethod === 'nagad') {
     var transactionId = transactionInput ? transactionInput.value.trim() : '';
     if (!transactionId || transactionId.length < 6) { showError('transactionId', 'transactionError'); isValid = false; }
   }
@@ -171,6 +204,7 @@ function resetForm() {
   orderForm.classList.remove('hidden');
   successView.classList.add('hidden');
   clearErrors();
+  togglePaymentBox();
   updateSummary();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }

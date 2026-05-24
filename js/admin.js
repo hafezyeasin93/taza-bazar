@@ -149,10 +149,10 @@ function updateStats() {
 }
 
 function paymentLabel(order) {
-  if (order.paymentMethod === 'bkash') {
-    return 'bKash Manual<br><small>Number: ' + escapeHTML(order.bKashNumber || '01891548610') + '<br>Txnid: ' + escapeHTML(order.transactionId || '-') + '</small>';
-  }
-  return 'ক্যাশ অন ডেলিভারি';
+  var methodName = order.paymentMethod === 'nagad' ? 'Nagad Manual' : 'bKash Manual';
+  var fallbackNumber = order.paymentMethod === 'nagad' ? '01629518850' : '01891548610';
+  var number = order.paymentNumber || order.bKashNumber || order.nagadNumber || fallbackNumber;
+  return methodName + '<br><small>Number: ' + escapeHTML(number) + '<br>Txnid: ' + escapeHTML(order.transactionId || '-') + '</small>';
 }
 
 function renderOrders() {

@@ -23,7 +23,7 @@
 
   <section class="order-section premium-checkout-section">
     <div class="container">
-      <div class="premium-checkout-heading"><span class="premium-eyebrow">Secure checkout</span><h1 class="section-title" style="text-align: left;">🛒 প্রিমিয়াম অর্ডার ফর্ম</h1><p class="section-subtitle" style="text-align: left;">নিচের ফর্মটি পূরণ করে অর্ডার কনফার্ম করুন। bKash বা ক্যাশ অন ডেলিভারি—আপনার সুবিধামতো পেমেন্ট করুন।</p></div>
+      <div class="premium-checkout-heading"><span class="premium-eyebrow">Secure checkout</span><h1 class="section-title" style="text-align: left;">🛒 প্রিমিয়াম অর্ডার ফর্ম</h1><p class="section-subtitle" style="text-align: left;">নিচের ফর্মটি পূরণ করে অর্ডার কনফার্ম করুন। bKash অথবা Nagad—ম্যানুয়াল পেমেন্ট করে Transaction ID দিয়ে অর্ডার কনফার্ম করুন।</p></div>
 
       <form id="orderForm" class="order-form premium-order-form" novalidate>
         <div style="background: var(--mango-light); border-radius: var(--radius); padding: 16px; margin-bottom: 24px; display: flex; align-items: center; gap: 12px;">
@@ -69,28 +69,30 @@
 
         <div class="form-group">
           <label class="form-label" for="paymentMethod">পেমেন্ট পদ্ধতি</label>
-          <select id="paymentMethod" class="form-select">
-            <option value="cod">ক্যাশ অন ডেলিভারি (হাতে পেয়ে টাকা দিন)</option>
+          <select id="paymentMethod" class="form-select" required>
+            <option value="" selected disabled>পেমেন্ট পদ্ধতি নির্বাচন করুন</option>
             <option value="bkash">bKash Manual Payment</option>
+            <option value="nagad">Nagad Manual Payment</option>
           </select>
+          <div class="error-msg" id="paymentError">bKash অথবা Nagad নির্বাচন করুন।</div>
         </div>
 
-        <div class="bkash-payment-box hidden" id="bkashPaymentBox">
+        <div class="bkash-payment-box manual-payment-box hidden" id="manualPaymentBox">
           <div class="bkash-header">
-            <div class="bkash-icon">৳</div>
+            <div class="bkash-icon" id="paymentIcon">৳</div>
             <div>
-              <h3>bKash Payment</h3>
-              <p>Send Money করুন এবং Transaction ID দিন</p>
+              <h3 id="paymentBoxTitle">Manual Payment</h3>
+              <p id="paymentInstructions">Send Money করুন এবং Transaction ID দিন</p>
             </div>
           </div>
           <div class="bkash-number-row">
-            <span>bKash Number</span>
-            <strong id="bkashNumber">01891548610</strong>
+            <span id="paymentProviderLabel">Payment Number</span>
+            <strong id="paymentNumber">-</strong>
           </div>
           <div class="form-group" style="margin-bottom: 0;">
             <label class="form-label" for="transactionId">Transaction ID / Txnid <span class="required">*</span></label>
             <input type="text" id="transactionId" class="form-input" placeholder="যেমন: 9A7B6C5D4E">
-            <div class="error-msg" id="transactionError">bKash Transaction ID লিখুন।</div>
+            <div class="error-msg" id="transactionError">Transaction ID লিখুন।</div>
           </div>
         </div>
 

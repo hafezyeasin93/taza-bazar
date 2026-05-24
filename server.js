@@ -14,6 +14,7 @@ const UPLOADS_DIR = path.join(__dirname, 'data', 'uploads');
 const ADMIN_DEFAULT_USERNAME = 'admin';
 const ADMIN_DEFAULT_PASSWORD = 'TazaBazar@2026!';
 const BKASH_NUMBER = '01891548610';
+const NAGAD_NUMBER = '01629518850';
 
 app.use(cors());
 app.use(bodyParser.json({ limit: '12mb' }));
@@ -100,8 +101,21 @@ function publicSiteData() {
     product: settings.product,
     sliderImages: sliderImages,
     bKashNumber: BKASH_NUMBER,
+    nagadNumber: NAGAD_NUMBER,
     siteName: 'tazabazar.bd.com'
   };
+}
+
+function paymentProviderName(method) {
+  if (method === 'bkash') return 'bKash Manual';
+  if (method === 'nagad') return 'Nagad Manual';
+  return 'Manual Payment';
+}
+
+function paymentProviderNumber(method) {
+  if (method === 'bkash') return BKASH_NUMBER;
+  if (method === 'nagad') return NAGAD_NUMBER;
+  return '';
 }
 
 let emailTransporter = null;
@@ -173,7 +187,7 @@ async function notifyOwner(order) {
     order.customerName + ' (' + order.phone + ')\n' +
     order.quantity + 'kg রুপালি আম\n' +
     'মোট: ' + order.totalPrice + ' টাকা\n' +
-    'পেমেন্ট: ' + (order.paymentMethod === 'bkash' ? 'bKash (' + order.transactionId + ')' : 'COD') + '\n' +
+    'পেমেন্ট: ' + paymentProviderName(order.paymentMethod) + ' (' + order.transactionId + ')' + '\n' +
     'ঠিকানা: ' + order.address;
 
   const emailHTML = `
@@ -190,8 +204,9 @@ async function notifyOwner(order) {
           <tr><td style="padding:8px 0;font-weight:bold;color:#555;">💰 মূল্য/কেজি</td><td>${order.pricePerKg} টাকা</td></tr>
           <tr style="background:#fff7ed;"><td style="padding:8px 0;font-weight:bold;color:#555;">💵 মোট</td><td style="font-size:20px;font-weight:bold;color:#16a34a;">${order.totalPrice} টাকা</td></tr>
           <tr><td style="padding:8px 0;font-weight:bold;color:#555;">📍 ঠিকানা</td><td>${order.address}</td></tr>
-          <tr style="background:#fff7ed;"><td style="padding:8px 0;font-weight:bold;color:#555;">💳 পেমেন্ট</td><td>${order.paymentMethod === 'cod' ? 'ক্যাশ অন ডেলিভারি' : 'bKash Manual'}</td></tr>
-          ${order.paymentMethod === 'bkash' ? '<tr><td style="padding:8px 0;font-weight:bold;color:#555;">📲 bKash</td><td>' + order.bKashNumber + '</td></tr><tr style="background:#fff7ed;"><td style="padding:8px 0;font-weight:bold;color:#555;">Txnid</td><td>' + order.transactionId + '</td></tr>' : ''}
+          <tr style="background:#fff7ed;"><td style="padding:8px 0;font-weight:bold;color:#555;">💳 পেমেন্ট</td><td>${paymentProviderName(order.paymentMethod)}</td></tr>
+          <tr><td style="padding:8px 0;font-weight:bold;color:#555;">📲 Payment Number</td><td>${order.paymentNumber || paymentProviderNumber(order.paymentMethod)}</td></tr>
+          <tr style="background:#fff7ed;"><td style="padding:8px 0;font-weight:bold;color:#555;">Txnid</td><td>${order.transactionId}</td></tr>
           ${order.note ? '<tr><td style="padding:8px 0;font-weight:bold;color:#555;">📝 নোট</td><td>' + order.note + '</td></tr>' : ''}
         </table>
         <div style="margin-top:20px;padding:12px;background:#fef2f2;border-radius:8px;text-align:center;font-size:13px;color:#991b1b;">
@@ -235,10 +250,14 @@ app.post('/api/orders', async (req, res) => {
     if (isNaN(qty) || qty < (product.minOrderKg || 1) || qty > (product.maxOrderKg || 50)) {
       return res.status(400).json({ error: 'অনুগ্রহ করে ' + (product.minOrderKg || 1) + '-' + (product.maxOrderKg || 50) + ' কেজির মধ্যে অর্ডার করুন।' });
     }
-    const selectedPayment = paymentMethod || 'cod';
+    const selectedPayment = String(paymentMethod || '').trim().toLowerCase();
+    const allowedPaymentMethods = ['bkash', 'nagad'];
+    if (!allowedPaymentMethods.includes(selectedPayment)) {
+      return res.status(400).json({ error: 'পেমেন্ট পদ্ধতি হিসেবে bKash বা Nagad নির্বাচন করুন।' });
+    }
     const cleanTransactionId = String(transactionId || '').trim();
-    if (selectedPayment === 'bkash' && cleanTransactionId.length < 6) {
-      return res.status(400).json({ error: 'bKash Transaction ID (Txnid) দিতে হবে।' });
+    if (cleanTransactionId.length < 6) {
+      return res.status(400).json({ error: paymentProviderName(selectedPayment) + ' Transaction ID (Txnid) দিতে হবে।' });
     }
     const orders = getOrders();
     const orderId = Date.now().toString(36).toUpperCase() + Math.random().toString(36).substring(2, 6).toUpperCase();
@@ -252,8 +271,10 @@ app.post('/api/orders', async (req, res) => {
       pricePerKg: product.pricePerKg,
       totalPrice,
       paymentMethod: selectedPayment,
-      transactionId: selectedPayment === 'bkash' ? cleanTransactionId : '',
+      transactionId: cleanTransactionId,
+      paymentNumber: paymentProviderNumber(selectedPayment),
       bKashNumber: selectedPayment === 'bkash' ? BKASH_NUMBER : '',
+      nagadNumber: selectedPayment === 'nagad' ? NAGAD_NUMBER : '',
       note: note || '',
       status: 'new',
       createdAt: new Date().toISOString()
