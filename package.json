@@ -1,7 +1,7 @@
 {
   "name": "taza-bazar",
   "version": "1.0.0",
-  "description": "তাজা বাজার - রুপালি আম অনলাইন অর্ডার",
+  "description": "tazabazar.bd.com - রুপালি আম অনলাইন অর্ডার",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

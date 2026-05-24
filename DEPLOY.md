@@ -1,4 +1,4 @@
-# 🚀 তাজা বাজার — Render.com ডিপ্লয় গাইড
+# 🚀 tazabazar.bd.com — Render.com ডিপ্লয় গাইড
 
 ## ধাপ ১: GitHub-এ আপলোড করুন
 
@@ -9,7 +9,7 @@
 cd taza-bazar
 git init
 git add .
-git commit -m "তাজা বাজার - রুপালি আম অর্ডার ওয়েবসাইট"
+git commit -m "tazabazar.bd.com - রুপালি আম অর্ডার ওয়েবসাইট"
 git branch -M main
 git remote add origin https://github.com/YOUR_USERNAME/taza-bazar.git
 git push -u origin main
@@ -65,6 +65,7 @@ Render.com-এ Environment Variable হিসেবে যোগ করুন:
 ---
 
 **অ্যাডমিন প্যানেল:** `https://taza-bazar.onrender.com/admin`
-**ডিফল্ট পাসওয়ার্ড:** `taza2024` (সাথে সাথে বদলে ফেলুন!)
+**ডিফল্ট ইউজারনেম:** `admin`  
+**ডিফল্ট পাসওয়ার্ড:** `TazaBazar@2026!` (সাথে সাথে বদলে ফেলুন!)
 
 প্রশ্ন থাকলে: ০১৬২৯৫১৮৮৫০ | hafezyeasin93@gmail.com

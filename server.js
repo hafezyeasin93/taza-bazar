@@ -8,17 +8,25 @@ const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-app.use(cors());
-app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname)));
-
 const ORDERS_FILE = path.join(__dirname, 'data', 'orders.json');
 const SETTINGS_FILE = path.join(__dirname, 'data', 'settings.json');
+const UPLOADS_DIR = path.join(__dirname, 'data', 'uploads');
+const ADMIN_DEFAULT_USERNAME = 'admin';
+const ADMIN_DEFAULT_PASSWORD = 'TazaBazar@2026!';
+const BKASH_NUMBER = '01891548610';
+
+app.use(cors());
+app.use(bodyParser.json({ limit: '12mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '12mb' }));
+app.use(express.static(path.join(__dirname)));
+app.use('/uploads', express.static(UPLOADS_DIR));
 
 function initDataFiles() {
   if (!fs.existsSync(path.join(__dirname, 'data'))) {
     fs.mkdirSync(path.join(__dirname, 'data'), { recursive: true });
+  }
+  if (!fs.existsSync(UPLOADS_DIR)) {
+    fs.mkdirSync(UPLOADS_DIR, { recursive: true });
   }
   if (!fs.existsSync(ORDERS_FILE)) {
     fs.writeFileSync(ORDERS_FILE, JSON.stringify([], null, 2));
@@ -33,7 +41,9 @@ function initDataFiles() {
         maxOrderKg: 50,
         description: 'এই মৌসুমের সেরা রুপালি আম। টাটকা, সুস্বাদু ও রসালো। সরাসরি বাগান থেকে সংগ্রহ করা।'
       },
-      adminPassword: 'taza2024'
+      adminUsername: ADMIN_DEFAULT_USERNAME,
+      adminPassword: ADMIN_DEFAULT_PASSWORD,
+      websiteImages: []
     }, null, 2));
   }
 }
@@ -47,11 +57,51 @@ function saveOrders(orders) {
 }
 
 function getSettings() {
-  return JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf8'));
+  const settings = JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf8'));
+  let changed = false;
+  if (!settings.adminUsername) { settings.adminUsername = ADMIN_DEFAULT_USERNAME; changed = true; }
+  if (!settings.adminPassword || settings.adminPassword === 'taza2024') { settings.adminPassword = ADMIN_DEFAULT_PASSWORD; changed = true; }
+  if (!Array.isArray(settings.websiteImages)) { settings.websiteImages = []; changed = true; }
+  if (changed) saveSettings(settings);
+  return settings;
 }
 
 function saveSettings(settings) {
   fs.writeFileSync(SETTINGS_FILE, JSON.stringify(settings, null, 2));
+}
+
+function authAdmin(req) {
+  const settings = getSettings();
+  const username = req.headers['x-admin-username'] || req.query.username || '';
+  const password = req.headers['x-admin-password'] || req.query.password || '';
+  return username === settings.adminUsername && password === settings.adminPassword;
+}
+
+function requireAdmin(req, res) {
+  if (!authAdmin(req)) {
+    res.status(401).json({ error: 'অননুমোদিত অ্যাক্সেস।' });
+    return false;
+  }
+  return true;
+}
+
+function sanitizeFilename(name) {
+  return String(name || 'image')
+    .toLowerCase()
+    .replace(/[^a-z0-9._-]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 60) || 'image';
+}
+
+function publicSiteData() {
+  const settings = getSettings();
+  const sliderImages = (settings.websiteImages || []).filter(function(img) { return img.showInSlider; });
+  return {
+    product: settings.product,
+    sliderImages: sliderImages,
+    bKashNumber: BKASH_NUMBER,
+    siteName: 'tazabazar.bd.com'
+  };
 }
 
 let emailTransporter = null;
@@ -102,7 +152,7 @@ async function sendEmail(to, subject, html) {
   }
   try {
     const info = await transporter.sendMail({
-      from: '"তাজা বাজার" <' + process.env.EMAIL_USER + '>',
+      from: '"tazabazar.bd.com" <' + process.env.EMAIL_USER + '>',
       to: to,
       subject: subject,
       html: html
@@ -119,10 +169,11 @@ async function notifyOwner(order) {
   const ownerPhone = process.env.OWNER_PHONE || '01629518850';
   const ownerEmail = process.env.OWNER_EMAIL || 'hafezyeasin93@gmail.com';
 
-  const smsMessage = 'তাজা বাজার - নতুন অর্ডার!\n' +
+  const smsMessage = 'tazabazar.bd.com - নতুন অর্ডার!\n' +
     order.customerName + ' (' + order.phone + ')\n' +
     order.quantity + 'kg রুপালি আম\n' +
     'মোট: ' + order.totalPrice + ' টাকা\n' +
+    'পেমেন্ট: ' + (order.paymentMethod === 'bkash' ? 'bKash (' + order.transactionId + ')' : 'COD') + '\n' +
     'ঠিকানা: ' + order.address;
 
   const emailHTML = `
@@ -139,7 +190,8 @@ async function notifyOwner(order) {
           <tr><td style="padding:8px 0;font-weight:bold;color:#555;">💰 মূল্য/কেজি</td><td>${order.pricePerKg} টাকা</td></tr>
           <tr style="background:#fff7ed;"><td style="padding:8px 0;font-weight:bold;color:#555;">💵 মোট</td><td style="font-size:20px;font-weight:bold;color:#16a34a;">${order.totalPrice} টাকা</td></tr>
           <tr><td style="padding:8px 0;font-weight:bold;color:#555;">📍 ঠিকানা</td><td>${order.address}</td></tr>
-          <tr style="background:#fff7ed;"><td style="padding:8px 0;font-weight:bold;color:#555;">💳 পেমেন্ট</td><td>${order.paymentMethod === 'cod' ? 'ক্যাশ অন ডেলিভারি' : order.paymentMethod}</td></tr>
+          <tr style="background:#fff7ed;"><td style="padding:8px 0;font-weight:bold;color:#555;">💳 পেমেন্ট</td><td>${order.paymentMethod === 'cod' ? 'ক্যাশ অন ডেলিভারি' : 'bKash Manual'}</td></tr>
+          ${order.paymentMethod === 'bkash' ? '<tr><td style="padding:8px 0;font-weight:bold;color:#555;">📲 bKash</td><td>' + order.bKashNumber + '</td></tr><tr style="background:#fff7ed;"><td style="padding:8px 0;font-weight:bold;color:#555;">Txnid</td><td>' + order.transactionId + '</td></tr>' : ''}
           ${order.note ? '<tr><td style="padding:8px 0;font-weight:bold;color:#555;">📝 নোট</td><td>' + order.note + '</td></tr>' : ''}
         </table>
         <div style="margin-top:20px;padding:12px;background:#fef2f2;border-radius:8px;text-align:center;font-size:13px;color:#991b1b;">
@@ -156,7 +208,7 @@ async function notifyOwner(order) {
 
 // API Routes
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', name: 'তাজা বাজার API', version: '1.0.0' });
+  res.json({ status: 'ok', name: 'tazabazar.bd.com API', version: '1.0.0' });
 });
 
 app.get('/api/product', (req, res) => {
@@ -164,9 +216,13 @@ app.get('/api/product', (req, res) => {
   res.json(settings.product);
 });
 
+app.get('/api/site', (req, res) => {
+  res.json(publicSiteData());
+});
+
 app.post('/api/orders', async (req, res) => {
   try {
-    const { customerName, phone, email, address, quantity, paymentMethod, note } = req.body;
+    const { customerName, phone, email, address, quantity, paymentMethod, transactionId, note } = req.body;
     if (!customerName || !phone || !address || !quantity) {
       return res.status(400).json({ error: 'অনুগ্রহ করে সব আবশ্যক তথ্য পূরণ করুন।' });
     }
@@ -179,6 +235,11 @@ app.post('/api/orders', async (req, res) => {
     if (isNaN(qty) || qty < (product.minOrderKg || 1) || qty > (product.maxOrderKg || 50)) {
       return res.status(400).json({ error: 'অনুগ্রহ করে ' + (product.minOrderKg || 1) + '-' + (product.maxOrderKg || 50) + ' কেজির মধ্যে অর্ডার করুন।' });
     }
+    const selectedPayment = paymentMethod || 'cod';
+    const cleanTransactionId = String(transactionId || '').trim();
+    if (selectedPayment === 'bkash' && cleanTransactionId.length < 6) {
+      return res.status(400).json({ error: 'bKash Transaction ID (Txnid) দিতে হবে।' });
+    }
     const orders = getOrders();
     const orderId = Date.now().toString(36).toUpperCase() + Math.random().toString(36).substring(2, 6).toUpperCase();
     const totalPrice = qty * product.pricePerKg;
@@ -190,7 +251,9 @@ app.post('/api/orders', async (req, res) => {
       quantity: qty,
       pricePerKg: product.pricePerKg,
       totalPrice,
-      paymentMethod: paymentMethod || 'cod',
+      paymentMethod: selectedPayment,
+      transactionId: selectedPayment === 'bkash' ? cleanTransactionId : '',
+      bKashNumber: selectedPayment === 'bkash' ? BKASH_NUMBER : '',
       note: note || '',
       status: 'new',
       createdAt: new Date().toISOString()
@@ -211,20 +274,13 @@ app.post('/api/orders', async (req, res) => {
 });
 
 app.get('/api/admin/orders', (req, res) => {
-  const password = req.headers['x-admin-password'] || req.query.password;
-  const settings = getSettings();
-  if (password !== settings.adminPassword) {
-    return res.status(401).json({ error: 'অননুমোদিত অ্যাক্সেস।' });
-  }
+  if (!requireAdmin(req, res)) return;
   res.json(getOrders());
 });
 
 app.patch('/api/admin/orders/:id', (req, res) => {
-  const password = req.headers['x-admin-password'] || req.query.password;
+  if (!requireAdmin(req, res)) return;
   const settings = getSettings();
-  if (password !== settings.adminPassword) {
-    return res.status(401).json({ error: 'অননুমোদিত অ্যাক্সেস।' });
-  }
   const { id } = req.params;
   const { status } = req.body;
   const validStatuses = ['new', 'confirmed', 'delivered', 'cancelled'];
@@ -243,11 +299,8 @@ app.patch('/api/admin/orders/:id', (req, res) => {
 });
 
 app.put('/api/admin/product', (req, res) => {
-  const password = req.headers['x-admin-password'] || req.query.password;
+  if (!requireAdmin(req, res)) return;
   const settings = getSettings();
-  if (password !== settings.adminPassword) {
-    return res.status(401).json({ error: 'অননুমোদিত অ্যাক্সেস।' });
-  }
   const { pricePerKg, stockAvailable, minOrderKg, maxOrderKg, description } = req.body;
   if (pricePerKg !== undefined) settings.product.pricePerKg = parseFloat(pricePerKg);
   if (stockAvailable !== undefined) settings.product.stockAvailable = stockAvailable === true || stockAvailable === 'true';
@@ -258,19 +311,97 @@ app.put('/api/admin/product', (req, res) => {
   res.json({ success: true, product: settings.product });
 });
 
-app.put('/api/admin/password', (req, res) => {
-  const password = req.headers['x-admin-password'] || req.query.password;
+app.put('/api/admin/account', (req, res) => {
+  if (!requireAdmin(req, res)) return;
   const settings = getSettings();
-  if (password !== settings.adminPassword) {
-    return res.status(401).json({ error: 'অননুমোদিত অ্যাক্সেস।' });
+  const { newUsername, newPassword } = req.body;
+  if (!newUsername || String(newUsername).trim().length < 3) {
+    return res.status(400).json({ error: 'ইউজারনেম কমপক্ষে ৩ অক্ষরের হতে হবে।' });
   }
+  if (!newPassword || String(newPassword).length < 10) {
+    return res.status(400).json({ error: 'পাসওয়ার্ড কমপক্ষে ১০ অক্ষরের হতে হবে।' });
+  }
+  settings.adminUsername = String(newUsername).trim();
+  settings.adminPassword = String(newPassword);
+  saveSettings(settings);
+  res.json({ success: true, username: settings.adminUsername, message: 'অ্যাডমিন অ্যাকাউন্ট আপডেট হয়েছে।' });
+});
+
+app.put('/api/admin/password', (req, res) => {
+  if (!requireAdmin(req, res)) return;
+  const settings = getSettings();
   const { newPassword } = req.body;
-  if (!newPassword || newPassword.length < 4) {
-    return res.status(400).json({ error: 'পাসওয়ার্ড কমপক্ষে ৪ অক্ষরের হতে হবে।' });
+  if (!newPassword || newPassword.length < 10) {
+    return res.status(400).json({ error: 'পাসওয়ার্ড কমপক্ষে ১০ অক্ষরের হতে হবে।' });
   }
   settings.adminPassword = newPassword;
   saveSettings(settings);
   res.json({ success: true, message: 'পাসওয়ার্ড আপডেট হয়েছে।' });
+});
+
+app.get('/api/admin/images', (req, res) => {
+  if (!requireAdmin(req, res)) return;
+  const settings = getSettings();
+  res.json(settings.websiteImages || []);
+});
+
+app.post('/api/admin/images', (req, res) => {
+  if (!requireAdmin(req, res)) return;
+  const { name, dataUrl, showInSlider } = req.body;
+  const match = String(dataUrl || '').match(/^data:(image\/(png|jpeg|jpg|webp|gif));base64,(.+)$/i);
+  if (!match) {
+    return res.status(400).json({ error: 'শুধু PNG, JPG, WEBP বা GIF ছবি আপলোড করা যাবে।' });
+  }
+  const mimeType = match[1].toLowerCase().replace('image/jpg', 'image/jpeg');
+  const extMap = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp', 'image/gif': 'gif' };
+  const ext = extMap[mimeType];
+  const buffer = Buffer.from(match[3], 'base64');
+  if (buffer.length > 8 * 1024 * 1024) {
+    return res.status(400).json({ error: 'ছবির সাইজ সর্বোচ্চ ৮MB হতে পারবে।' });
+  }
+  const id = Date.now().toString(36).toUpperCase() + Math.random().toString(36).substring(2, 7).toUpperCase();
+  const fileName = id + '-' + sanitizeFilename(name).replace(/\.[a-z0-9]+$/i, '') + '.' + ext;
+  fs.writeFileSync(path.join(UPLOADS_DIR, fileName), buffer);
+  const settings = getSettings();
+  const image = {
+    id: id,
+    name: name || fileName,
+    url: '/uploads/' + fileName,
+    showInSlider: showInSlider !== false,
+    createdAt: new Date().toISOString()
+  };
+  settings.websiteImages.unshift(image);
+  saveSettings(settings);
+  res.status(201).json({ success: true, image: image });
+});
+
+app.patch('/api/admin/images/:id', (req, res) => {
+  if (!requireAdmin(req, res)) return;
+  const settings = getSettings();
+  const image = (settings.websiteImages || []).find(function(img) { return img.id === req.params.id; });
+  if (!image) return res.status(404).json({ error: 'ছবি পাওয়া যায়নি।' });
+  if (req.body.name !== undefined) image.name = String(req.body.name).trim() || image.name;
+  if (req.body.showInSlider !== undefined) image.showInSlider = req.body.showInSlider === true || req.body.showInSlider === 'true';
+  image.updatedAt = new Date().toISOString();
+  saveSettings(settings);
+  res.json({ success: true, image: image });
+});
+
+app.delete('/api/admin/images/:id', (req, res) => {
+  if (!requireAdmin(req, res)) return;
+  const settings = getSettings();
+  const images = settings.websiteImages || [];
+  const index = images.findIndex(function(img) { return img.id === req.params.id; });
+  if (index === -1) return res.status(404).json({ error: 'ছবি পাওয়া যায়নি।' });
+  const image = images[index];
+  if (image.url && image.url.startsWith('/uploads/')) {
+    const filePath = path.join(UPLOADS_DIR, path.basename(image.url));
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+  }
+  images.splice(index, 1);
+  settings.websiteImages = images;
+  saveSettings(settings);
+  res.json({ success: true });
 });
 
 app.get('/', (req, res) => {
@@ -288,7 +419,7 @@ app.get('/admin', (req, res) => {
 initDataFiles();
 
 app.listen(PORT, () => {
-  console.log('\n🥭 তাজা বাজার সার্ভার চালু হয়েছে: http://localhost:' + PORT);
+  console.log('\n🥭 tazabazar.bd.com সার্ভার চালু হয়েছে: http://localhost:' + PORT);
   console.log('📱 মালিক ফোন: ' + (process.env.OWNER_PHONE || '01629518850'));
   console.log('📧 মালিক ইমেইল: ' + (process.env.OWNER_EMAIL || 'hafezyeasin93@gmail.com'));
   console.log('🔑 অ্যাডমিন প্যানেল: http://localhost:' + PORT + '/admin\n');

@@ -13,13 +13,18 @@ var submitBtn = document.getElementById('submitBtn');
 var submitText = document.getElementById('submitText');
 var submitSpinner = document.getElementById('submitSpinner');
 var quantityInput = document.getElementById('quantity');
+var paymentMethodInput = document.getElementById('paymentMethod');
+var bkashPaymentBox = document.getElementById('bkashPaymentBox');
+var transactionInput = document.getElementById('transactionId');
 
 async function loadProduct() {
   try {
-    var res = await fetch('/api/product');
+    var res = await fetch('/api/site');
     if (res.ok) {
-      var product = await res.json();
+      var site = await res.json();
+      var product = site.product || site;
       STATE.product = product;
+      if (site.bKashNumber && document.getElementById('bkashNumber')) { document.getElementById('bkashNumber').textContent = site.bKashNumber; }
       STATE.pricePerKg = product.pricePerKg;
       STATE.minOrder = product.minOrderKg || 1;
       STATE.maxOrder = product.maxOrderKg || 50;
@@ -61,6 +66,20 @@ function updateSummary() {
 
 quantityInput.addEventListener('input', updateSummary);
 
+function togglePaymentBox() {
+  if (!paymentMethodInput || !bkashPaymentBox) return;
+  if (paymentMethodInput.value === 'bkash') {
+    bkashPaymentBox.classList.remove('hidden');
+  } else {
+    bkashPaymentBox.classList.add('hidden');
+    if (transactionInput) transactionInput.value = '';
+  }
+}
+
+if (paymentMethodInput) {
+  paymentMethodInput.addEventListener('change', togglePaymentBox);
+}
+
 function showToast(message, type) {
   toast.textContent = message;
   toast.className = 'toast ' + type + ' show';
@@ -96,6 +115,11 @@ function validateForm() {
   if (!address || address.length < 5) { showError('address', 'addressError'); isValid = false; }
   var qty = parseInt(quantityInput.value);
   if (isNaN(qty) || qty < STATE.minOrder || qty > STATE.maxOrder) { showError('quantity', 'quantityError'); isValid = false; }
+  var paymentMethod = paymentMethodInput ? paymentMethodInput.value : 'cod';
+  if (paymentMethod === 'bkash') {
+    var transactionId = transactionInput ? transactionInput.value.trim() : '';
+    if (!transactionId || transactionId.length < 6) { showError('transactionId', 'transactionError'); isValid = false; }
+  }
   if (!STATE.stockAvailable) { showToast('দুঃখিত, বর্তমানে আমের স্টক শেষ।', 'error'); isValid = false; }
   return isValid;
 }
@@ -113,6 +137,7 @@ orderForm.addEventListener('submit', async function(e) {
     address: document.getElementById('address').value.trim(),
     quantity: parseInt(quantityInput.value),
     paymentMethod: document.getElementById('paymentMethod').value,
+    transactionId: transactionInput ? transactionInput.value.trim() : '',
     note: document.getElementById('note').value.trim()
   };
   try {
@@ -157,4 +182,5 @@ document.getElementById('phone').addEventListener('input', function(e) {
 });
 
 loadProduct();
+togglePaymentBox();
 updateSummary();

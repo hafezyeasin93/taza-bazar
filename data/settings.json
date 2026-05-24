@@ -1,1 +1,13 @@
-{"product":{"name":"রুপালি আম","pricePerKg":120,"stockAvailable":true,"minOrderKg":1,"maxOrderKg":50,"description":"এই মৌসুমের সেরা রুপালি আম। টাটকা, সুস্বাদু ও রসালো। সরাসরি বাগান থেকে সংগ্রহ করা।"},"adminPassword":"taza2024"}
+{
+  "product": {
+    "name": "রুপালি আম",
+    "pricePerKg": 120,
+    "stockAvailable": true,
+    "minOrderKg": 1,
+    "maxOrderKg": 50,
+    "description": "এই মৌসুমের সেরা রুপালি আম। টাটকা, সুস্বাদু ও রসালো। সরাসরি বাগান থেকে সংগ্রহ করা।"
+  },
+  "adminUsername": "admin",
+  "adminPassword": "TazaBazar@2026!",
+  "websiteImages": []
+}

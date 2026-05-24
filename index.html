@@ -3,139 +3,237 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="তাজা বাজার - এই মৌসুমের সেরা রুপালি আম। টাটকা, সুস্বাদু ও রসালো। সরাসরি বাগান থেকে আপনার দোরগোড়ায়।">
-  <meta name="theme-color" content="#f97316">
-  <meta property="og:title" content="তাজা বাজার - রুপালি আম">
-  <meta property="og:description" content="সেরা মানের রুপালি আম সরাসরি বাগান থেকে। এখনই অর্ডার করুন!">
+  <meta name="description" content="tazabazar.bd.com - প্রিমিয়াম রুপালি আম। বাছাই করা, টাটকা ও রসালো আম সরাসরি বাগান থেকে আপনার দোরগোড়ায়।">
+  <meta name="theme-color" content="#0f3d2e">
+  <meta property="og:title" content="tazabazar.bd.com | প্রিমিয়াম রুপালি আম">
+  <meta property="og:description" content="সেরা মানের রুপালি আম সরাসরি বাগান থেকে। টাটকা গ্যারান্টি, দ্রুত ডেলিভারি ও ক্যাশ অন ডেলিভারি।">
   <meta property="og:type" content="website">
-  <title>তাজা বাজার | রুপালি আম - টাটকা বাগান থেকে আপনার দোরগোড়ায়</title>
+  <title>tazabazar.bd.com | Premium Rupali Mango Delivery</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥭</text></svg>">
 </head>
-<body>
-  <nav class="navbar">
+<body class="premium-home">
+  <nav class="navbar premium-navbar">
     <a href="/" class="navbar-brand">
       <div class="logo-icon">🥭</div>
-      তাজা বাজার
+      <span>tazabazar.bd.com</span>
     </a>
     <div class="navbar-links">
+      <a href="#features" class="nav-link-admin premium-nav-secondary">বিশেষত্ব</a>
       <a href="/order" class="nav-link-order">অর্ডার করুন</a>
       <a href="/admin" class="nav-link-admin">অ্যাডমিন</a>
     </div>
   </nav>
 
-  <section class="hero">
-    <div class="container">
-      <div class="hero-badge">
-        <span class="dot"></span> স্টক Available
-      </div>
-      <span class="hero-mango">🥭</span>
-      <h1 class="hero-title">
-        এই মৌসুমের সেরা <span>রুপালি আম</span>
-      </h1>
-      <p class="hero-subtitle">
-        টাটকা, সুস্বাদু ও রসালো রুপালি আম সরাসরি বাগান থেকে আপনার দোরগোড়ায় পৌঁছে যাবে।
-      </p>
-      <div class="hero-price-tag">
-        মাত্র <span class="price" id="heroPrice">১২০</span> টাকা/কেজি
-      </div>
-      <br>
-      <a href="/order" class="btn btn-primary btn-lg">
-        🛒 এখনই অর্ডার করুন
-      </a>
-    </div>
-  </section>
-
-  <section class="features">
-    <div class="container">
-      <h2 class="section-title">কেন তাজা বাজার থেকে কিনবেন?</h2>
-      <p class="section-subtitle">আমাদের বিশেষত্ব যা আপনাকে সেরা অভিজ্ঞতা দেবে</p>
-      <div class="feature-grid">
-        <div class="feature-card">
-          <div class="feature-icon orange">🌳</div>
-          <h3>সরাসরি বাগান থেকে</h3>
-          <p>আমরা নিজেরাই বাগান থেকে আম সংগ্রহ করি, কোনো মধ্যস্বত্বভোগী নেই।</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon green">✅</div>
-          <h3>১০০% টাটকা গ্যারান্টি</h3>
-          <p>অর্ডারের দিনই গাছ থেকে আম পেড়ে ডেলিভারি দেওয়া হয়।</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon yellow">🚚</div>
-          <h3>দ্রুত ডেলিভারি</h3>
-          <p>অর্ডারের ২৪ ঘণ্টার মধ্যে আপনার ঠিকানায় পৌঁছে যাবে।</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon red">💰</div>
-          <h3>ক্যাশ অন ডেলিভারি</h3>
-          <p>আম হাতে পেয়ে তারপর টাকা দিন। কোনো অগ্রিম পেমেন্ট নয়।</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="product-section">
-    <div class="container">
-      <h2 class="section-title">আজকের প্রোডাক্ট</h2>
-      <p class="section-subtitle">এই মৌসুমের বিশেষ অফার</p>
-      <div class="product-card">
-        <span class="product-badge">🔥 বেস্ট সেলার</span>
-        <h3 class="product-name" id="productName">রুপালি আম</h3>
-        <p class="product-desc" id="productDesc">
-          এই মৌসুমের সেরা রুপালি আম। টাটকা, সুস্বাদু ও রসালো। সরাসরি বাগান থেকে সংগ্রহ করা।
-        </p>
-        <div class="product-price-row">
-          <span class="product-price" id="productPrice">১২০</span>
-          <span class="product-price-unit">টাকা/কেজি</span>
-        </div>
-        <div class="product-meta">
-          <div class="product-meta-item">
-            <span class="icon">📦</span> ন্যূনতম ১ কেজি
+  <main>
+    <section class="premium-hero">
+      <div class="premium-hero-glow glow-one"></div>
+      <div class="premium-hero-glow glow-two"></div>
+      <div class="container home-container premium-hero-grid">
+        <div class="premium-hero-content">
+          <div class="hero-badge premium-badge">
+            <span class="dot"></span> Premium Harvest • স্টক Available
           </div>
-          <div class="product-meta-item">
-            <span class="icon">⚖️</span> সর্বোচ্চ ৫০ কেজি
+          <h1 class="premium-hero-title">
+            বাগানের সেরা <span>রুপালি আম</span><br>
+            এখন আপনার ঘরে
+          </h1>
+          <p class="premium-hero-subtitle">
+            tazabazar.bd.com আপনাকে দিচ্ছে বাছাই করা, পরিপক্ক ও প্রাকৃতিক স্বাদের রুপালি আম—সরাসরি বাগান থেকে দ্রুত ডেলিভারি।
+          </p>
+          <div class="premium-hero-actions">
+            <a href="/order" class="btn btn-primary btn-lg premium-primary-btn">🛒 এখনই অর্ডার করুন</a>
+            <a href="#product" class="btn btn-outline btn-lg premium-outline-btn">আজকের অফার দেখুন</a>
           </div>
-          <div class="product-meta-item">
-            <span class="icon">💵</span> ক্যাশ অন ডেলিভারি
+          <div class="premium-trust-row" aria-label="Trust highlights">
+            <div class="premium-trust-item"><strong>২৪ ঘন্টা</strong><span>দ্রুত ডেলিভারি</span></div>
+            <div class="premium-trust-item"><strong>১০০%</strong><span>টাটকা গ্যারান্টি</span></div>
+            <div class="premium-trust-item"><strong>COD</strong><span>হাতে পেয়ে টাকা</span></div>
           </div>
         </div>
-        <div style="margin-top: 20px;">
-          <a href="/order" class="btn btn-green btn-block btn-lg">
-            🥭 অর্ডার করতে যান
-          </a>
+
+        <div class="premium-showcase" aria-label="Premium mango product showcase">
+          <div class="showcase-card">
+            <div class="showcase-topline">
+              <span>Today's premium pick</span>
+              <span class="showcase-rating">★ 4.9</span>
+            </div>
+            <div class="showcase-mango-wrap">
+              <div class="premium-image-slider hidden" id="heroImageSlider"></div>
+              <span class="showcase-mango" id="heroMangoFallback">🥭</span>
+              <span class="orbit orbit-one">🌿</span>
+              <span class="orbit orbit-two">✨</span>
+              <span class="orbit orbit-three">💧</span>
+            </div>
+            <h2 id="heroProductName">রুপালি আম</h2>
+            <p id="heroProductDesc">সুগন্ধি, মিষ্টি ও রসালো—প্রতিটি আম হাতে বাছাই করা।</p>
+            <div class="showcase-price">
+              <span>মাত্র</span>
+              <strong><span id="heroPrice">১২০</span> টাকা</strong>
+              <span>/ কেজি</span>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section style="background: linear-gradient(135deg, #f97316, #ea580c); padding: 48px 0; text-align: center; color: white;">
-    <div class="container">
-      <h2 style="font-size: 24px; font-weight: 900; margin-bottom: 8px;">রুপালি আমের স্বাদ নিতে প্রস্তুত?</h2>
-      <p style="font-size: 15px; opacity: 0.9; margin-bottom: 24px;">সীমিত সময়ের অফার! এখনই অর্ডার করুন।</p>
-      <a href="/order" class="btn btn-lg" style="background: white; color: #ea580c; font-weight: 800;">
-        অর্ডার করুন 🥭
-      </a>
-    </div>
-  </section>
+    <section class="premium-strip">
+      <div class="container home-container premium-strip-grid">
+        <div><span>🌳</span> সরাসরি বাগান থেকে</div>
+        <div><span>🧺</span> হাতে বাছাই করা</div>
+        <div><span>🚚</span> দ্রুত হোম ডেলিভারি</div>
+        <div><span>💵</span> ক্যাশ অন ডেলিভারি</div>
+      </div>
+    </section>
 
-  <footer class="footer">
-    <div class="footer-brand">🥭 তাজা বাজার</div>
-    <p style="margin-bottom: 8px;">সরাসরি বাগান থেকে আপনার দোরগোড়ায়</p>
+    <section class="features premium-features" id="features">
+      <div class="container home-container">
+        <div class="premium-section-heading">
+          <span class="premium-eyebrow">Why choose us</span>
+          <h2 class="section-title">কেন tazabazar.bd.com থেকে কিনবেন?</h2>
+          <p class="section-subtitle">প্রতিটি অর্ডারে প্রিমিয়াম কোয়ালিটি, পরিষ্কার প্যাকেজিং ও নির্ভরযোগ্য সার্ভিস</p>
+        </div>
+        <div class="feature-grid premium-feature-grid">
+          <div class="feature-card premium-feature-card">
+            <div class="feature-icon orange">🌳</div>
+            <h3>সরাসরি বাগান থেকে</h3>
+            <p>মধ্যস্বত্বভোগী ছাড়া বিশ্বস্ত উৎস থেকে আম সংগ্রহ করা হয়, তাই স্বাদ ও মান থাকে অক্ষুণ্ণ।</p>
+          </div>
+          <div class="feature-card premium-feature-card">
+            <div class="feature-icon green">✅</div>
+            <h3>প্রিমিয়াম গ্রেডিং</h3>
+            <p>আকার, পরিপক্কতা ও সতেজতা দেখে প্রতিটি আম হাতে বাছাই করে প্যাক করা হয়।</p>
+          </div>
+          <div class="feature-card premium-feature-card">
+            <div class="feature-icon yellow">🚚</div>
+            <h3>দ্রুত ডেলিভারি</h3>
+            <p>অর্ডার কনফার্ম হওয়ার পর দ্রুততম সময়ে আপনার ঠিকানায় পৌঁছে দেওয়ার ব্যবস্থা।</p>
+          </div>
+          <div class="feature-card premium-feature-card">
+            <div class="feature-icon red">💰</div>
+            <h3>ঝুঁকিমুক্ত পেমেন্ট</h3>
+            <p>আম হাতে পেয়ে তারপর টাকা দিন। কোনো অগ্রিম পেমেন্টের ঝামেলা নেই।</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="premium-product-section" id="product">
+      <div class="container home-container premium-product-grid">
+        <div class="premium-product-copy">
+          <span class="premium-eyebrow">Limited seasonal offer</span>
+          <h2>আজকের প্রিমিয়াম প্রোডাক্ট</h2>
+          <p>এই মৌসুমের বিশেষ রুপালি আম—প্রাকৃতিক সুগন্ধ, মিষ্টতা ও রসালো স্বাদের জন্য জনপ্রিয়। পরিবার, উপহার বা ব্যবসায়িক অর্ডারের জন্য আদর্শ।</p>
+          <div class="premium-process">
+            <div><span>01</span><strong>অর্ডার করুন</strong><small>ফর্ম পূরণ করে পরিমাণ জানান</small></div>
+            <div><span>02</span><strong>কনফার্মেশন</strong><small>আমরা ফোনে অর্ডার নিশ্চিত করব</small></div>
+            <div><span>03</span><strong>ডেলিভারি</strong><small>তাজা আম পৌঁছে যাবে ঠিকানায়</small></div>
+          </div>
+        </div>
+
+        <div class="product-card premium-product-card">
+          <span class="product-badge">🔥 বেস্ট সেলার</span>
+          <h3 class="product-name" id="productName">রুপালি আম</h3>
+          <p class="product-desc" id="productDesc">
+            এই মৌসুমের সেরা রুপালি আম। টাটকা, সুস্বাদু ও রসালো। সরাসরি বাগান থেকে সংগ্রহ করা।
+          </p>
+          <div class="product-price-row">
+            <span class="product-price" id="productPrice">১২০</span>
+            <span class="product-price-unit">টাকা/কেজি</span>
+          </div>
+          <div class="product-meta premium-product-meta">
+            <div class="product-meta-item">
+              <span class="icon">📦</span> ন্যূনতম <span id="minOrderKg">১</span> কেজি
+            </div>
+            <div class="product-meta-item">
+              <span class="icon">⚖️</span> সর্বোচ্চ <span id="maxOrderKg">৫০</span> কেজি
+            </div>
+            <div class="product-meta-item">
+              <span class="icon">💵</span> ক্যাশ অন ডেলিভারি
+            </div>
+          </div>
+          <div class="premium-stock" id="stockStatus">✅ স্টকে আছে</div>
+          <div style="margin-top: 22px;">
+            <a href="/order" class="btn btn-green btn-block btn-lg">
+              🥭 অর্ডার করতে যান
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="premium-cta">
+      <div class="container home-container premium-cta-card">
+        <div>
+          <span class="premium-eyebrow light">Freshness delivered</span>
+          <h2>প্রিমিয়াম রুপালি আমের স্বাদ নিতে প্রস্তুত?</h2>
+          <p>সীমিত মৌসুমের অফার—আজই অর্ডার করুন, আমরা দ্রুত যোগাযোগ করব।</p>
+        </div>
+        <a href="/order" class="btn btn-lg premium-white-btn">অর্ডার করুন 🥭</a>
+      </div>
+    </section>
+  </main>
+
+  <a href="https://wa.me/8801629518850?text=Assalamu%20Alaikum%2C%20I%20need%20help%20with%20a%20premium%20mango%20order" class="whatsapp-float" target="_blank" rel="noopener" aria-label="WhatsApp support">
+    <span>✆</span>
+    <strong>WhatsApp</strong>
+  </a>
+
+  <footer class="footer premium-footer">
+    <div class="footer-brand">🥭 tazabazar.bd.com</div>
+    <p style="margin-bottom: 8px;">প্রিমিয়াম আম সরাসরি বাগান থেকে আপনার দোরগোড়ায়</p>
     <p>যোগাযোগ: <a href="tel:01629518850">০১৬২৯৫১৮৮৫০</a> | <a href="mailto:hafezyeasin93@gmail.com">hafezyeasin93@gmail.com</a></p>
-    <p style="margin-top: 12px; font-size: 11px; opacity: 0.6;">&copy; ২০২৬ তাজা বাজার। সর্বস্বত্ব সংরক্ষিত।</p>
+    <p style="margin-top: 12px; font-size: 11px; opacity: 0.6;">&copy; ২০২৬ tazabazar.bd.com। সর্বস্বত্ব সংরক্ষিত।</p>
   </footer>
 
   <script>
+    function toBanglaDigits(value) {
+      return String(value).replace(/\d/g, function(digit) {
+        return '০১২৩৪৫৬৭৮৯'[digit];
+      });
+    }
+
+    function renderHeroSlider(images) {
+      const slider = document.getElementById('heroImageSlider');
+      const fallback = document.getElementById('heroMangoFallback');
+      if (!slider || !fallback || !images.length) return;
+      fallback.classList.add('hidden');
+      slider.classList.remove('hidden');
+      slider.innerHTML = images.map((image, index) => `
+        <figure class="premium-slide ${index === 0 ? 'active' : ''}">
+          <img src="${image.url}" alt="${image.name || 'Premium mango image'}">
+        </figure>
+      `).join('') + '<div class="premium-slider-dots">' + images.map((_, index) => `<span class="${index === 0 ? 'active' : ''}"></span>`).join('') + '</div>';
+      let active = 0;
+      const slides = slider.querySelectorAll('.premium-slide');
+      const dots = slider.querySelectorAll('.premium-slider-dots span');
+      if (slides.length < 2) return;
+      setInterval(function() {
+        slides[active].classList.remove('active');
+        dots[active].classList.remove('active');
+        active = (active + 1) % slides.length;
+        slides[active].classList.add('active');
+        dots[active].classList.add('active');
+      }, 3800);
+    }
+
     async function loadProduct() {
       try {
-        const res = await fetch('/api/product');
+        const res = await fetch('/api/site');
         if (res.ok) {
-          const product = await res.json();
-          document.getElementById('heroPrice').textContent = product.pricePerKg;
-          document.getElementById('productPrice').textContent = product.pricePerKg;
+          const site = await res.json();
+          const product = site.product || site;
+          const price = toBanglaDigits(product.pricePerKg);
+          document.getElementById('heroPrice').textContent = price;
+          document.getElementById('productPrice').textContent = price;
           document.getElementById('productName').textContent = product.name;
+          document.getElementById('heroProductName').textContent = product.name;
           document.getElementById('productDesc').textContent = product.description;
+          document.getElementById('heroProductDesc').textContent = product.description;
+          document.getElementById('minOrderKg').textContent = toBanglaDigits(product.minOrderKg || 1);
+          document.getElementById('maxOrderKg').textContent = toBanglaDigits(product.maxOrderKg || 50);
+          document.getElementById('stockStatus').textContent = product.stockAvailable ? '✅ স্টকে আছে' : '⛔ বর্তমানে স্টক শেষ';
+          renderHeroSlider(site.sliderImages || []);
         }
       } catch(e) { console.log('Using default product data'); }
     }
