@@ -79,7 +79,7 @@ npm start
 
 ### মালিকের জন্য (অ্যাডমিন):
 1. `http://localhost:3000/admin` এ যান
-2. ডিফল্ট ইউজারনেম: **admin** এবং ডিফল্ট পাসওয়ার্ড: **TazaBazar@2026!**
+2. ডিফল্ট ইউজারনেম: **admin** এবং ডিফল্ট পাসওয়ার্ড: **Tazabazar@2026**
 3. অর্ডার লিস্ট দেখুন, কনফার্ম/বাতিল করুন
 4. সেটিংস ট্যাবে দাম ও স্টক পরিবর্তন করুন
 5. পাসওয়ার্ড পরিবর্তন করতে পারেন
@@ -119,7 +119,7 @@ taza-bazar/
 
 ## 🌐 ডিপ্লয়মেন্ট
 
-### Render.com (ফ্রি)
+### Render.com (Persistent Disk Recommended)
 1. GitHub-এ প্রজেক্ট আপলোড করুন
 2. Render.com-এ নতুন Web Service তৈরি করুন
 3. Build Command: `npm install`

@@ -46,6 +46,8 @@ git push -u origin main
 
 Render.com-এ Environment Variable হিসেবে যোগ করুন:
 
+> গুরুত্বপূর্ণ: Admin settings, uploaded images, price changes এবং password যেন restart/deploy-এর পরও থাকে, Render Persistent Disk mount path `/var/data` ব্যবহার করুন এবং `DATA_DIR=/var/data` রাখুন।
+
 **ইমেইলের জন্য (Gmail):**
 | Key | Value |
 |-----|-------|
@@ -66,6 +68,6 @@ Render.com-এ Environment Variable হিসেবে যোগ করুন:
 
 **অ্যাডমিন প্যানেল:** `https://taza-bazar.onrender.com/admin`
 **ডিফল্ট ইউজারনেম:** `admin`  
-**ডিফল্ট পাসওয়ার্ড:** `TazaBazar@2026!` (সাথে সাথে বদলে ফেলুন!)
+**ডিফল্ট পাসওয়ার্ড:** `Tazabazar@2026` (সাথে সাথে বদলে ফেলুন!)
 
 প্রশ্ন থাকলে: ০১৬২৯৫১৮৮৫০ | hafezyeasin93@gmail.com

@@ -7,7 +7,27 @@
     "maxOrderKg": 50,
     "description": "এই মৌসুমের সেরা রুপালি আম। টাটকা, সুস্বাদু ও রসালো। সরাসরি বাগান থেকে সংগ্রহ করা।"
   },
+  "products": {
+    "mango": {
+      "name": "রুপালি আম",
+      "pricePerKg": 120,
+      "stockAvailable": true,
+      "minOrderKg": 1,
+      "maxOrderKg": 50,
+      "description": "এই মৌসুমের সেরা রুপালি আম। টাটকা, সুস্বাদু ও রসালো। সরাসরি বাগান থেকে সংগ্রহ করা।"
+    },
+    "litchi": {
+      "name": "লিচু",
+      "pricePerKg": 0,
+      "stockAvailable": false,
+      "minOrderKg": 1,
+      "maxOrderKg": 50,
+      "description": "লিচু ম্যানেজমেন্টের জন্য প্রস্তুত। স্টক ও মূল্য সেট করে লাইভ করুন।"
+    }
+  },
   "adminUsername": "admin",
-  "adminPassword": "TazaBazar@2026!",
+  "adminPasswordHash": "60449b1dfb4c4d5ec5d971477b01cbda1d5865c75373d4a1e74d35ef07af1fddad9be6d193ef68dbc30351ae2623b46ebc1874b87d73c5b88a06a96c95d66a6a",
+  "adminPasswordSalt": "5278eed59610628f142b64da3795a533",
+  "passwordAlgorithm": "scrypt",
   "websiteImages": []
 }

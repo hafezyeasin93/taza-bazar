@@ -5,14 +5,19 @@ const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
 const path = require('path');
 const fs = require('fs');
+const crypto = require('crypto');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const ORDERS_FILE = path.join(__dirname, 'data', 'orders.json');
-const SETTINGS_FILE = path.join(__dirname, 'data', 'settings.json');
-const UPLOADS_DIR = path.join(__dirname, 'data', 'uploads');
-const ADMIN_DEFAULT_USERNAME = 'admin';
-const ADMIN_DEFAULT_PASSWORD = 'TazaBazar@2026!';
+const DATA_DIR = process.env.DATA_DIR || (fs.existsSync('/var/data') ? '/var/data' : path.join(__dirname, 'data'));
+const ORDERS_FILE = path.join(DATA_DIR, 'orders.json');
+const SETTINGS_FILE = path.join(DATA_DIR, 'settings.json');
+const LOGS_FILE = path.join(DATA_DIR, 'activity.log');
+const UPLOADS_DIR = path.join(DATA_DIR, 'uploads');
+const ADMIN_DEFAULT_USERNAME = process.env.ADMIN_DEFAULT_USERNAME || 'admin';
+const ADMIN_DEFAULT_PASSWORD = process.env.ADMIN_DEFAULT_PASSWORD || 'Tazabazar@2026';
+const SESSION_SECRET = process.env.SESSION_SECRET || process.env.ADMIN_SESSION_SECRET || crypto.createHash('sha256').update(ADMIN_DEFAULT_PASSWORD + ':tazabazar.bd.com').digest('hex');
+const SESSION_MAX_AGE_MS = 1000 * 60 * 60 * 24 * 30;
 const BKASH_NUMBER = '01891548610';
 const NAGAD_NUMBER = '01629518850';
 
@@ -22,60 +27,182 @@ app.use(bodyParser.urlencoded({ extended: true, limit: '12mb' }));
 app.use(express.static(path.join(__dirname)));
 app.use('/uploads', express.static(UPLOADS_DIR));
 
+function defaultProduct() {
+  return {
+    name: 'রুপালি আম',
+    pricePerKg: 120,
+    stockAvailable: true,
+    minOrderKg: 1,
+    maxOrderKg: 50,
+    description: 'এই মৌসুমের সেরা রুপালি আম। টাটকা, সুস্বাদু ও রসালো। সরাসরি বাগান থেকে সংগ্রহ করা।'
+  };
+}
+
+function defaultLitchiProduct() {
+  return {
+    name: 'লিচু',
+    pricePerKg: 0,
+    stockAvailable: false,
+    minOrderKg: 1,
+    maxOrderKg: 50,
+    description: 'লিচু ম্যানেজমেন্টের জন্য প্রস্তুত। স্টক ও মূল্য সেট করে লাইভ করুন।'
+  };
+}
+
+function hashPassword(password, salt) {
+  const passwordSalt = salt || crypto.randomBytes(16).toString('hex');
+  const hash = crypto.scryptSync(String(password), passwordSalt, 64).toString('hex');
+  return { adminPasswordHash: hash, adminPasswordSalt: passwordSalt, passwordAlgorithm: 'scrypt' };
+}
+
+function verifyPassword(password, settings) {
+  if (!settings.adminPasswordHash || !settings.adminPasswordSalt) return false;
+  const hash = crypto.scryptSync(String(password), settings.adminPasswordSalt, 64);
+  const stored = Buffer.from(settings.adminPasswordHash, 'hex');
+  return stored.length === hash.length && crypto.timingSafeEqual(stored, hash);
+}
+
+function defaultSettings() {
+  const mango = defaultProduct();
+  return Object.assign({
+    product: mango,
+    products: {
+      mango: mango,
+      litchi: defaultLitchiProduct()
+    },
+    adminUsername: ADMIN_DEFAULT_USERNAME,
+    websiteImages: []
+  }, hashPassword(ADMIN_DEFAULT_PASSWORD));
+}
+
 function initDataFiles() {
-  if (!fs.existsSync(path.join(__dirname, 'data'))) {
-    fs.mkdirSync(path.join(__dirname, 'data'), { recursive: true });
+  if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
   }
   if (!fs.existsSync(UPLOADS_DIR)) {
     fs.mkdirSync(UPLOADS_DIR, { recursive: true });
   }
   if (!fs.existsSync(ORDERS_FILE)) {
-    fs.writeFileSync(ORDERS_FILE, JSON.stringify([], null, 2));
+    writeJSONAtomic(ORDERS_FILE, []);
   }
   if (!fs.existsSync(SETTINGS_FILE)) {
-    fs.writeFileSync(SETTINGS_FILE, JSON.stringify({
-      product: {
-        name: 'রুপালি আম',
-        pricePerKg: 120,
-        stockAvailable: true,
-        minOrderKg: 1,
-        maxOrderKg: 50,
-        description: 'এই মৌসুমের সেরা রুপালি আম। টাটকা, সুস্বাদু ও রসালো। সরাসরি বাগান থেকে সংগ্রহ করা।'
-      },
-      adminUsername: ADMIN_DEFAULT_USERNAME,
-      adminPassword: ADMIN_DEFAULT_PASSWORD,
-      websiteImages: []
-    }, null, 2));
+    writeJSONAtomic(SETTINGS_FILE, defaultSettings());
   }
+  getSettings();
+}
+
+function readJSON(file, fallback) {
+  try {
+    if (!fs.existsSync(file)) return fallback;
+    return JSON.parse(fs.readFileSync(file, 'utf8'));
+  } catch (error) {
+    console.error('[Storage] Failed to read JSON:', file, error.message);
+    return fallback;
+  }
+}
+
+function writeJSONAtomic(file, data) {
+  const dir = path.dirname(file);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+  const tmpFile = file + '.tmp-' + process.pid + '-' + Date.now();
+  fs.writeFileSync(tmpFile, JSON.stringify(data, null, 2));
+  fs.renameSync(tmpFile, file);
 }
 
 function getOrders() {
-  return JSON.parse(fs.readFileSync(ORDERS_FILE, 'utf8'));
+  return readJSON(ORDERS_FILE, []);
 }
 
 function saveOrders(orders) {
-  fs.writeFileSync(ORDERS_FILE, JSON.stringify(orders, null, 2));
+  writeJSONAtomic(ORDERS_FILE, orders);
 }
 
 function getSettings() {
-  const settings = JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf8'));
+  const settings = readJSON(SETTINGS_FILE, defaultSettings());
   let changed = false;
+  if (!settings.product) { settings.product = defaultProduct(); changed = true; }
+  if (!settings.products) { settings.products = { mango: settings.product, litchi: defaultLitchiProduct() }; changed = true; }
+  if (!settings.products.mango) { settings.products.mango = settings.product || defaultProduct(); changed = true; }
+  if (!settings.products.litchi) { settings.products.litchi = defaultLitchiProduct(); changed = true; }
   if (!settings.adminUsername) { settings.adminUsername = ADMIN_DEFAULT_USERNAME; changed = true; }
-  if (!settings.adminPassword || settings.adminPassword === 'taza2024') { settings.adminPassword = ADMIN_DEFAULT_PASSWORD; changed = true; }
+  if (!settings.adminPasswordHash || !settings.adminPasswordSalt) {
+    const legacyPassword = settings.adminPassword || ADMIN_DEFAULT_PASSWORD;
+    Object.assign(settings, hashPassword(legacyPassword));
+    delete settings.adminPassword;
+    changed = true;
+  }
+  if (settings.adminPassword) { delete settings.adminPassword; changed = true; }
   if (!Array.isArray(settings.websiteImages)) { settings.websiteImages = []; changed = true; }
+  settings.product = settings.products.mango;
   if (changed) saveSettings(settings);
   return settings;
 }
 
 function saveSettings(settings) {
-  fs.writeFileSync(SETTINGS_FILE, JSON.stringify(settings, null, 2));
+  if (settings.products && settings.products.mango) {
+    settings.product = settings.products.mango;
+  }
+  writeJSONAtomic(SETTINGS_FILE, settings);
+  try {
+    fs.copyFileSync(SETTINGS_FILE, SETTINGS_FILE + '.bak');
+  } catch (error) {
+    console.warn('[Storage] Settings backup failed:', error.message);
+  }
+}
+
+function parseCookies(req) {
+  const header = req.headers.cookie || '';
+  return header.split(';').reduce(function(cookies, part) {
+    const index = part.indexOf('=');
+    if (index > -1) cookies[part.slice(0, index).trim()] = decodeURIComponent(part.slice(index + 1).trim());
+    return cookies;
+  }, {});
+}
+
+function signPayload(payload) {
+  return crypto.createHmac('sha256', SESSION_SECRET).update(payload).digest('base64url');
+}
+
+function createSessionToken(username) {
+  const payload = Buffer.from(JSON.stringify({ username: username, exp: Date.now() + SESSION_MAX_AGE_MS })).toString('base64url');
+  return payload + '.' + signPayload(payload);
+}
+
+function verifySessionToken(token) {
+  if (!token || token.indexOf('.') === -1) return null;
+  const parts = token.split('.');
+  const payload = parts[0];
+  const signature = parts[1];
+  const expected = signPayload(payload);
+  const sigBuffer = Buffer.from(signature || '');
+  const expectedBuffer = Buffer.from(expected);
+  if (sigBuffer.length !== expectedBuffer.length || !crypto.timingSafeEqual(sigBuffer, expectedBuffer)) return null;
+  try {
+    const data = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
+    if (!data.exp || data.exp < Date.now()) return null;
+    return data;
+  } catch (error) {
+    return null;
+  }
+}
+
+function setSessionCookie(req, res, username) {
+  const token = createSessionToken(username);
+  const secure = req.secure || req.headers['x-forwarded-proto'] === 'https';
+  res.setHeader('Set-Cookie', 'admin_session=' + encodeURIComponent(token) + '; Max-Age=' + Math.floor(SESSION_MAX_AGE_MS / 1000) + '; Path=/; HttpOnly; SameSite=Lax' + (secure ? '; Secure' : ''));
+}
+
+function clearSessionCookie(res) {
+  res.setHeader('Set-Cookie', 'admin_session=; Max-Age=0; Path=/; HttpOnly; SameSite=Lax');
 }
 
 function authAdmin(req) {
   const settings = getSettings();
+  const cookieSession = verifySessionToken(parseCookies(req).admin_session);
+  if (cookieSession && cookieSession.username === settings.adminUsername) return true;
   const username = req.headers['x-admin-username'] || req.query.username || '';
   const password = req.headers['x-admin-password'] || req.query.password || '';
-  return username === settings.adminUsername && password === settings.adminPassword;
+  return username === settings.adminUsername && verifyPassword(password, settings);
 }
 
 function requireAdmin(req, res) {
@@ -84,6 +211,29 @@ function requireAdmin(req, res) {
     return false;
   }
   return true;
+}
+
+function appendLog(type, message, meta) {
+  try {
+    if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+    const entry = { id: Date.now().toString(36).toUpperCase() + Math.random().toString(36).substring(2, 7).toUpperCase(), type: type, message: message, meta: meta || {}, createdAt: new Date().toISOString() };
+    fs.appendFileSync(LOGS_FILE, JSON.stringify(entry) + '\n');
+    return entry;
+  } catch (error) {
+    console.error('[Logs] Failed:', error.message);
+    return null;
+  }
+}
+
+function readLogs(limit) {
+  try {
+    if (!fs.existsSync(LOGS_FILE)) return [];
+    const lines = fs.readFileSync(LOGS_FILE, 'utf8').trim().split('\n').filter(Boolean);
+    return lines.slice(-1 * (limit || 100)).reverse().map(function(line) { try { return JSON.parse(line); } catch(e) { return null; } }).filter(Boolean);
+  } catch (error) {
+    console.error('[Logs] Read failed:', error.message);
+    return [];
+  }
 }
 
 function sanitizeFilename(name) {
@@ -99,6 +249,7 @@ function publicSiteData() {
   const sliderImages = (settings.websiteImages || []).filter(function(img) { return img.showInSlider; });
   return {
     product: settings.product,
+    products: settings.products,
     sliderImages: sliderImages,
     bKashNumber: BKASH_NUMBER,
     nagadNumber: NAGAD_NUMBER,
@@ -235,6 +386,31 @@ app.get('/api/site', (req, res) => {
   res.json(publicSiteData());
 });
 
+app.post('/api/admin/login', (req, res) => {
+  const settings = getSettings();
+  const username = String(req.body.username || '').trim();
+  const password = String(req.body.password || '');
+  if (username === settings.adminUsername && verifyPassword(password, settings)) {
+    setSessionCookie(req, res, settings.adminUsername);
+    appendLog('security', 'Admin login successful', { username: settings.adminUsername });
+    return res.json({ success: true, username: settings.adminUsername, sessionDays: Math.floor(SESSION_MAX_AGE_MS / (1000 * 60 * 60 * 24)) });
+  }
+  appendLog('security', 'Failed admin login attempt', { username: username });
+  res.status(401).json({ error: 'ভুল ইউজারনেম বা পাসওয়ার্ড।' });
+});
+
+app.post('/api/admin/logout', (req, res) => {
+  clearSessionCookie(res);
+  appendLog('security', 'Admin logged out');
+  res.json({ success: true });
+});
+
+app.get('/api/admin/me', (req, res) => {
+  if (!requireAdmin(req, res)) return;
+  const settings = getSettings();
+  res.json({ username: settings.adminUsername, storage: { dataDir: DATA_DIR, persistent: DATA_DIR !== path.join(__dirname, 'data') }, sessionDays: Math.floor(SESSION_MAX_AGE_MS / (1000 * 60 * 60 * 24)) });
+});
+
 app.post('/api/orders', async (req, res) => {
   try {
     const { customerName, phone, email, address, quantity, paymentMethod, transactionId, note } = req.body;
@@ -281,6 +457,7 @@ app.post('/api/orders', async (req, res) => {
     };
     orders.unshift(newOrder);
     saveOrders(orders);
+    appendLog('order', 'New order received', { orderId: orderId, paymentMethod: selectedPayment, transactionId: cleanTransactionId, totalPrice: totalPrice, status: 'new' });
     notifyOwner(newOrder).catch(err => console.error('Notification error:', err));
     console.log('[Order] New order #' + orderId + ' by ' + customerName);
     res.status(201).json({
@@ -297,6 +474,17 @@ app.post('/api/orders', async (req, res) => {
 app.get('/api/admin/orders', (req, res) => {
   if (!requireAdmin(req, res)) return;
   res.json(getOrders());
+});
+
+app.get('/api/admin/products', (req, res) => {
+  if (!requireAdmin(req, res)) return;
+  const settings = getSettings();
+  res.json(settings.products || { mango: settings.product, litchi: defaultLitchiProduct() });
+});
+
+app.get('/api/admin/logs', (req, res) => {
+  if (!requireAdmin(req, res)) return;
+  res.json(readLogs(parseInt(req.query.limit) || 120));
 });
 
 app.patch('/api/admin/orders/:id', (req, res) => {
@@ -316,20 +504,28 @@ app.patch('/api/admin/orders/:id', (req, res) => {
   order.status = status;
   order.updatedAt = new Date().toISOString();
   saveOrders(orders);
+  appendLog('order-status', 'Order status updated', { orderId: id, status: status, paymentMethod: order.paymentMethod, transactionId: order.transactionId || '' });
   res.json({ success: true, order });
 });
 
 app.put('/api/admin/product', (req, res) => {
   if (!requireAdmin(req, res)) return;
   const settings = getSettings();
-  const { pricePerKg, stockAvailable, minOrderKg, maxOrderKg, description } = req.body;
-  if (pricePerKg !== undefined) settings.product.pricePerKg = parseFloat(pricePerKg);
-  if (stockAvailable !== undefined) settings.product.stockAvailable = stockAvailable === true || stockAvailable === 'true';
-  if (minOrderKg !== undefined) settings.product.minOrderKg = parseInt(minOrderKg);
-  if (maxOrderKg !== undefined) settings.product.maxOrderKg = parseInt(maxOrderKg);
-  if (description !== undefined) settings.product.description = description;
+  const productType = req.body.productType === 'litchi' ? 'litchi' : 'mango';
+  if (!settings.products) settings.products = { mango: settings.product || defaultProduct(), litchi: defaultLitchiProduct() };
+  if (!settings.products[productType]) settings.products[productType] = productType === 'litchi' ? defaultLitchiProduct() : defaultProduct();
+  const product = settings.products[productType];
+  const { name, pricePerKg, stockAvailable, minOrderKg, maxOrderKg, description } = req.body;
+  if (name !== undefined) product.name = String(name).trim() || product.name;
+  if (pricePerKg !== undefined) product.pricePerKg = parseFloat(pricePerKg) || 0;
+  if (stockAvailable !== undefined) product.stockAvailable = stockAvailable === true || stockAvailable === 'true';
+  if (minOrderKg !== undefined) product.minOrderKg = parseInt(minOrderKg) || 1;
+  if (maxOrderKg !== undefined) product.maxOrderKg = parseInt(maxOrderKg) || 50;
+  if (description !== undefined) product.description = String(description);
+  if (productType === 'mango') settings.product = product;
   saveSettings(settings);
-  res.json({ success: true, product: settings.product });
+  appendLog('product', productType + ' settings updated', { productType: productType, name: product.name, pricePerKg: product.pricePerKg, stockAvailable: product.stockAvailable });
+  res.json({ success: true, product: product, products: settings.products });
 });
 
 app.put('/api/admin/account', (req, res) => {
@@ -343,8 +539,11 @@ app.put('/api/admin/account', (req, res) => {
     return res.status(400).json({ error: 'পাসওয়ার্ড কমপক্ষে ১০ অক্ষরের হতে হবে।' });
   }
   settings.adminUsername = String(newUsername).trim();
-  settings.adminPassword = String(newPassword);
+  Object.assign(settings, hashPassword(newPassword));
+  delete settings.adminPassword;
   saveSettings(settings);
+  setSessionCookie(req, res, settings.adminUsername);
+  appendLog('security', 'Admin account updated', { username: settings.adminUsername });
   res.json({ success: true, username: settings.adminUsername, message: 'অ্যাডমিন অ্যাকাউন্ট আপডেট হয়েছে।' });
 });
 
@@ -355,8 +554,11 @@ app.put('/api/admin/password', (req, res) => {
   if (!newPassword || newPassword.length < 10) {
     return res.status(400).json({ error: 'পাসওয়ার্ড কমপক্ষে ১০ অক্ষরের হতে হবে।' });
   }
-  settings.adminPassword = newPassword;
+  Object.assign(settings, hashPassword(newPassword));
+  delete settings.adminPassword;
   saveSettings(settings);
+  setSessionCookie(req, res, settings.adminUsername);
+  appendLog('security', 'Admin password updated');
   res.json({ success: true, message: 'পাসওয়ার্ড আপডেট হয়েছে।' });
 });
 
@@ -393,6 +595,7 @@ app.post('/api/admin/images', (req, res) => {
   };
   settings.websiteImages.unshift(image);
   saveSettings(settings);
+  appendLog('image', 'Image uploaded', { imageId: id, name: image.name, showInSlider: image.showInSlider });
   res.status(201).json({ success: true, image: image });
 });
 
@@ -405,6 +608,7 @@ app.patch('/api/admin/images/:id', (req, res) => {
   if (req.body.showInSlider !== undefined) image.showInSlider = req.body.showInSlider === true || req.body.showInSlider === 'true';
   image.updatedAt = new Date().toISOString();
   saveSettings(settings);
+  appendLog('image', 'Image slider setting updated', { imageId: image.id, name: image.name, showInSlider: image.showInSlider });
   res.json({ success: true, image: image });
 });
 
@@ -422,6 +626,7 @@ app.delete('/api/admin/images/:id', (req, res) => {
   images.splice(index, 1);
   settings.websiteImages = images;
   saveSettings(settings);
+  appendLog('image', 'Image deleted', { imageId: image.id, name: image.name });
   res.json({ success: true });
 });
 

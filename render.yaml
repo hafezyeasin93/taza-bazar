@@ -2,12 +2,24 @@ services:
   - type: web
     name: taza-bazar
     env: node
-    plan: free
+    plan: starter
     buildCommand: npm install
     startCommand: npm start
+    disk:
+      name: taza-bazar-data
+      mountPath: /var/data
+      sizeGB: 1
     envVars:
       - key: PORT
         value: 10000
+      - key: DATA_DIR
+        value: /var/data
+      - key: ADMIN_DEFAULT_USERNAME
+        value: admin
+      - key: ADMIN_DEFAULT_PASSWORD
+        value: Tazabazar@2026
+      - key: SESSION_SECRET
+        generateValue: true
       - key: OWNER_PHONE
         value: 01629518850
       - key: OWNER_EMAIL

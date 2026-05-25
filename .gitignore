@@ -4,3 +4,5 @@ data/orders.json
 .env.local
 
 data/uploads/
+data/activity.log
+data/settings.json.bak
