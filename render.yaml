@@ -14,9 +14,9 @@ services:
         value: 10000
       - key: DATA_DIR
         value: /var/data
-      - key: ADMIN_DEFAULT_USERNAME
+      - key: ADMIN_USERNAME
         value: admin
-      - key: ADMIN_DEFAULT_PASSWORD
+      - key: ADMIN_PASSWORD
         value: Tazabazar@2026
       - key: SESSION_SECRET
         generateValue: true

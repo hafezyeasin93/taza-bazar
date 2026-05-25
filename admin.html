@@ -3,166 +3,47 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noindex, nofollow">
-  <meta name="theme-color" content="#0f172a">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#0b1120">
   <title>Premium Admin | tazabazar.bd.com</title>
   <link rel="stylesheet" href="css/style.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥭</text></svg>">
 </head>
-<body class="admin-body premium-admin-body">
-  <nav class="navbar premium-admin-navbar">
-    <a href="/" class="navbar-brand">
-      <div class="logo-icon">🥭</div>
-      <span>tazabazar.bd.com</span>
-    </a>
-    <div class="navbar-links">
-      <a href="/" class="nav-link-admin">হোম</a>
-      <button onclick="logout()" class="btn btn-sm admin-logout-btn">লগআউট</button>
+<body class="admin-pro">
+  <section id="loginView" class="admin-login-screen">
+    <div class="admin-login-card">
+      <span class="gold-pill">Secure Admin</span>
+      <h1>tazabazar Control Center</h1>
+      <p>Encrypted password + 30-day HttpOnly session cookie.</p>
+      <input id="usernameInput" value="admin" placeholder="Username" autocomplete="username">
+      <input id="passwordInput" type="password" placeholder="Password" autocomplete="current-password">
+      <button id="loginBtn" onclick="login()">Login</button>
+      <small id="loginError"></small>
+      <em>Default: admin / Tazabazar@2026</em>
     </div>
-  </nav>
+  </section>
 
-  <div id="loginView">
-    <div class="admin-login premium-login-card">
-      <div class="admin-login-icon">🔐</div>
-      <span class="premium-eyebrow">Secure Admin Access</span>
-      <h2>Premium Control Center</h2>
-      <p>দীর্ঘমেয়াদি নিরাপদ সেশন কুকি এবং এনক্রিপ্টেড পাসওয়ার্ড দিয়ে লগইন করুন।</p>
-      <div class="form-group">
-        <input type="text" id="usernameInput" class="form-input" placeholder="ইউজারনেম" value="admin" autocomplete="username">
-      </div>
-      <div class="form-group">
-        <input type="password" id="passwordInput" class="form-input" placeholder="পাসওয়ার্ড লিখুন" autocomplete="current-password">
-      </div>
-      <div id="loginError" class="admin-login-error">❌ ভুল ইউজারনেম বা পাসওয়ার্ড</div>
-      <button onclick="login()" class="btn btn-primary btn-block" id="loginBtn">
-        <span id="loginText">লগইন</span>
-        <span id="loginSpinner" class="spinner hidden"></span>
-      </button>
-      <p class="login-hint">ডিফল্ট: admin / Tazabazar@2026</p>
-    </div>
-  </div>
+  <section id="dashboardView" class="admin-dashboard hidden">
+    <aside class="admin-sidebar">
+      <h2>🥭 tazabazar</h2>
+      <button class="active" onclick="switchAdminTab('overview')">Overview</button>
+      <button onclick="switchAdminTab('mango')">🥭 Mango Management</button>
+      <button onclick="switchAdminTab('litchi')">🍒 Litchi Management</button>
+      <button onclick="switchAdminTab('orders')">Orders</button>
+      <button onclick="switchAdminTab('logs')">Live Logs</button>
+      <button onclick="logout()">Logout</button>
+    </aside>
+    <main class="admin-main">
+      <header class="admin-topbar"><div><span class="gold-pill">International Premium Dashboard</span><h1>Sales & Product Intelligence</h1><p id="storageStatus">Storage checking...</p></div><a href="/" target="_blank">View Site</a></header>
+      <div class="admin-stats-row"><div><strong id="statOrders">0</strong><span>Orders</span></div><div><strong id="statRevenue">৳0</strong><span>Revenue</span></div><div><strong id="statBkash">0</strong><span>bKash</span></div><div><strong id="statNagad">0</strong><span>Nagad</span></div></div>
 
-  <div id="dashboardView" class="hidden">
-    <div class="admin-shell">
-      <header class="admin-hero-panel">
-        <div>
-          <span class="premium-eyebrow light">International Admin Suite</span>
-          <h1>Sales, Products & Payment Intelligence</h1>
-          <p>Persistent JSON storage, encrypted credentials, 30-day secure session cookies, analytics and real-time transaction logs.</p>
-          <small id="storageStatus">Storage: checking...</small>
-        </div>
-        <div class="admin-hero-card">
-          <strong id="heroRevenue">৳0</strong>
-          <span>Total Valid Revenue</span>
-          <small id="heroPaymentMix">bKash / Nagad analytics</small>
-        </div>
-      </header>
-
-      <div class="admin-stats premium-admin-stats" id="statsRow">
-        <div class="stat-card orange"><div class="stat-value" id="statTotal">0</div><div class="stat-label">মোট অর্ডার</div></div>
-        <div class="stat-card"><div class="stat-value" id="statNew">0</div><div class="stat-label">নতুন অর্ডার</div></div>
-        <div class="stat-card green"><div class="stat-value" id="statConfirmed">0</div><div class="stat-label">কনফার্ম/ডেলিভার</div></div>
-        <div class="stat-card"><div class="stat-value" id="statRevenue">0</div><div class="stat-label">মোট আয় (টাকা)</div></div>
-      </div>
-
-      <div class="tab-nav premium-admin-tabs">
-        <button class="tab-btn active" onclick="switchTab('orders')">📋 Orders</button>
-        <button class="tab-btn" onclick="switchTab('products')">🥭 Products</button>
-        <button class="tab-btn" onclick="switchTab('images')">🖼️ Media Slider</button>
-        <button class="tab-btn" onclick="switchTab('logs')">🧾 Live Logs</button>
-        <button class="tab-btn" onclick="switchTab('settings')">🔐 Security</button>
-      </div>
-
-      <div id="tabOrders" class="tab-content active">
-        <section class="analytics-panel">
-          <div class="analytics-card">
-            <h3>Sales Analytics</h3>
-            <div class="analytics-bars" id="analyticsBars"></div>
-          </div>
-          <div class="analytics-card">
-            <h3>Payment Mix</h3>
-            <div class="payment-rings" id="paymentRings"></div>
-          </div>
-        </section>
-        <div class="refresh-bar">
-          <h2>Recent Orders</h2>
-          <div>
-            <span class="last-refresh" id="lastRefresh"></span>
-            <button onclick="loadOrders()" class="btn btn-sm btn-outline">🔄 Refresh</button>
-          </div>
-        </div>
-        <div class="order-list" id="orderList">
-          <div class="empty-state"><div class="icon">📭</div><h3>কোনো অর্ডার নেই</h3></div>
-        </div>
-      </div>
-
-      <div id="tabProducts" class="tab-content">
-        <div class="settings-section premium-admin-section">
-          <div class="product-management-header">
-            <div>
-              <h3>Product Management</h3>
-              <p>Mango Management এবং Litchi Management আলাদা করে নিয়ন্ত্রণ করুন। Mango বর্তমানে live checkout product.</p>
-            </div>
-            <div class="product-management-tabs">
-              <button class="active" id="mangoManagementBtn" onclick="switchProductManagement('mango')">🥭 Mango Management</button>
-              <button id="litchiManagementBtn" onclick="switchProductManagement('litchi')">🍒 Litchi Management</button>
-            </div>
-          </div>
-          <input type="hidden" id="setProductType" value="mango">
-          <div class="product-form-grid">
-            <div class="form-group"><label class="form-label">প্রোডাক্ট নাম</label><input type="text" id="setName" class="form-input"></div>
-            <div class="form-group"><label class="form-label">প্রতি কেজি মূল্য (টাকা)</label><input type="number" id="setPrice" class="form-input" min="0"></div>
-            <div class="form-group"><label class="form-label">ন্যূনতম অর্ডার (কেজি)</label><input type="number" id="setMinOrder" class="form-input" min="1"></div>
-            <div class="form-group"><label class="form-label">সর্বোচ্চ অর্ডার (কেজি)</label><input type="number" id="setMaxOrder" class="form-input" min="1"></div>
-          </div>
-          <div class="form-group"><label class="form-label">বিবরণ</label><textarea id="setDesc" class="form-textarea"></textarea></div>
-          <div class="toggle-wrapper">
-            <span class="toggle-label">স্টক Available</span>
-            <label class="toggle"><input type="checkbox" id="setStock" checked><span class="toggle-slider"></span></label>
-          </div>
-          <button onclick="saveProductSettings()" class="btn btn-primary btn-block mt-4">💾 Save Product Settings</button>
-        </div>
-      </div>
-
-      <div id="tabImages" class="tab-content">
-        <div class="settings-section premium-admin-section">
-          <h3>🖼️ Premium Media & Live Slider</h3>
-          <p style="font-size: 13px; color: var(--gray-500); margin-bottom: 16px;">Persistent disk storage ব্যবহার করে ছবি সংরক্ষণ হবে। কোন ছবি হোমপেজের top live slider-এ দেখাবে তা নির্বাচন করুন।</p>
-          <div class="image-upload-zone" id="imageUploadZone">
-            <input type="file" id="imageFileInput" accept="image/png,image/jpeg,image/webp,image/gif" multiple class="hidden">
-            <div class="image-upload-icon">📸</div>
-            <h4>Upload premium product images</h4>
-            <p>PNG, JPG, WEBP বা GIF • সর্বোচ্চ ৮MB</p>
-            <button type="button" onclick="document.getElementById('imageFileInput').click()" class="btn btn-primary mt-4">ছবি নির্বাচন করুন</button>
-          </div>
-          <div class="image-grid-admin" id="imageGridAdmin">
-            <div class="empty-state"><div class="icon">🖼️</div><h3>কোনো ছবি নেই</h3><p style="font-size:13px;">ছবি আপলোড করলে এখানে দেখাবে</p></div>
-          </div>
-        </div>
-      </div>
-
-      <div id="tabLogs" class="tab-content">
-        <div class="settings-section premium-admin-section">
-          <div class="refresh-bar"><h2>Real-time Activity Logs</h2><button onclick="loadLogs()" class="btn btn-sm btn-outline">🔄 Refresh Logs</button></div>
-          <div class="log-viewer" id="logViewer"></div>
-        </div>
-      </div>
-
-      <div id="tabSettings" class="tab-content">
-        <div class="settings-section premium-admin-section">
-          <h3>🔐 Encrypted Admin Account</h3>
-          <p style="font-size: 13px; color: var(--gray-500); margin-bottom: 16px;">Password is stored as a secure scrypt hash. Browser keeps only an HttpOnly 30-day session cookie.</p>
-          <div class="product-form-grid">
-            <div class="form-group"><label class="form-label">ইউজারনেম</label><input type="text" id="newUsername" class="form-input" placeholder="admin"></div>
-            <div class="form-group"><label class="form-label">নতুন পাসওয়ার্ড</label><input type="password" id="newPassword" class="form-input" placeholder="কমপক্ষে ১০ অক্ষর, শক্তিশালী পাসওয়ার্ড"></div>
-          </div>
-          <button onclick="changeAccount()" class="btn btn-outline btn-block">🔒 Update Secure Account</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="toast" id="toast"></div>
+      <section id="tabOverview" class="admin-tab active"><div class="analytics-card"><h3>Order Flow</h3><div id="analyticsBars"></div></div><div class="analytics-card"><h3>Payment & Txnid Checks</h3><div id="paymentMix"></div></div></section>
+      <section id="tabMango" class="admin-tab"><div id="mangoForm"></div></section>
+      <section id="tabLitchi" class="admin-tab"><div id="litchiForm"></div></section>
+      <section id="tabOrders" class="admin-tab"><h2>Recent Orders</h2><div id="orderList"></div></section>
+      <section id="tabLogs" class="admin-tab"><h2>Real-time Logs</h2><div id="logViewer"></div></section>
+    </main>
+  </section>
+  <div id="toast" class="toast"></div>
   <script src="js/admin.js"></script>
 </body>
 </html>

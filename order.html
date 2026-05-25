@@ -3,172 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="tazabazar.bd.com - রুপালি আম অর্ডার করুন। টাটকা আম সরাসরি বাগান থেকে।">
-  <meta name="theme-color" content="#f97316">
-  <title>অর্ডার করুন | tazabazar.bd.com</title>
+  <meta name="theme-color" content="#0f3d2e">
+  <title>Secure Checkout | tazabazar.bd.com</title>
   <link rel="stylesheet" href="css/style.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥭</text></svg>">
 </head>
-<body class="premium-order-page">
-  <nav class="navbar">
-    <a href="/" class="navbar-brand">
-      <div class="logo-icon">🥭</div>
-      tazabazar.bd.com
-    </a>
-    <div class="navbar-links">
-      <a href="/" class="nav-link-admin">হোম</a>
-      <a href="/admin" class="nav-link-admin">অ্যাডমিন</a>
-    </div>
-  </nav>
+<body class="luxury-site checkout-page">
+  <nav class="luxury-nav"><a href="/" class="luxury-brand"><span>🥭</span><strong>tazabazar.bd.com</strong></a><div class="luxury-nav-links"><a href="/">Home</a><a href="/admin">Admin</a></div></nav>
+  <main class="checkout-shell">
+    <section class="checkout-card">
+      <span class="gold-pill">Secure Advance Checkout</span>
+      <h1>Manual Payment Confirmation</h1>
+      <p>COD বন্ধ। bKash অথবা Nagad-এ পেমেন্ট করে Txnid দিয়ে অর্ডার কনফার্ম করুন।</p>
+      <div id="checkoutItems" class="checkout-items"></div>
+      <div class="checkout-total"><span>Total</span><strong id="checkoutTotal">৳0</strong></div>
+    </section>
 
-  <section class="order-section premium-checkout-section">
-    <div class="container">
-      <div class="premium-checkout-heading"><span class="premium-eyebrow">Secure checkout</span><h1 class="section-title" style="text-align: left;">🛒 প্রিমিয়াম অর্ডার ফর্ম</h1><p class="section-subtitle" style="text-align: left;">নিচের ফর্মটি পূরণ করে অর্ডার কনফার্ম করুন। bKash অথবা Nagad—ম্যানুয়াল পেমেন্ট করে Transaction ID দিয়ে অর্ডার কনফার্ম করুন।</p></div>
-
-      <form id="orderForm" class="order-form premium-order-form" novalidate>
-        <div style="background: var(--mango-light); border-radius: var(--radius); padding: 16px; margin-bottom: 24px; display: flex; align-items: center; gap: 12px;">
-          <span style="font-size: 40px;">🥭</span>
-          <div>
-            <div style="font-weight: 800; font-size: 18px;" id="formProductName">রুপালি আম</div>
-            <div style="color: var(--green-dark); font-weight: 700;">
-              <span id="formPrice">১২০</span> টাকা/কেজি
-            </div>
-            <div id="formStockStatus" style="font-size: 12px; color: var(--green-mid);">✅ স্টকে আছে</div>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="customerName">আপনার নাম <span class="required">*</span></label>
-          <input type="text" id="customerName" class="form-input" placeholder="আপনার পূর্ণ নাম লিখুন" required>
-          <div class="error-msg" id="nameError">অনুগ্রহ করে আপনার নাম লিখুন।</div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="phone">ফোন নম্বর <span class="required">*</span></label>
-          <input type="tel" id="phone" class="form-input" placeholder="উদা: ০১৭১২৩৪৫৬৭৮" required>
-          <div class="error-msg" id="phoneError">অনুগ্রহ করে একটি বৈধ বাংলাদেশী ফোন নম্বর লিখুন।</div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="email">ইমেইল (ঐচ্ছিক)</label>
-          <input type="email" id="email" class="form-input" placeholder="example@gmail.com">
-          <div class="error-msg" id="emailError">অনুগ্রহ করে একটি বৈধ ইমেইল ঠিকানা লিখুন।</div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="address">ডেলিভারি ঠিকানা <span class="required">*</span></label>
-          <textarea id="address" class="form-textarea" placeholder="বিস্তারিত ঠিকানা লিখুন (যেমন: বাড়ি নং, রাস্তা, এলাকা, থানা, জেলা)" required></textarea>
-          <div class="error-msg" id="addressError">অনুগ্রহ করে আপনার ঠিকানা লিখুন।</div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="quantity">পরিমাণ (কেজি) <span class="required">*</span></label>
-          <input type="number" id="quantity" class="form-input" placeholder="কত কেজি অর্ডার করতে চান?" min="1" max="50" step="1" required>
-          <div class="error-msg" id="quantityError">অনুগ্রহ করে ১-৫০ কেজির মধ্যে পরিমাণ লিখুন।</div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="paymentMethod">পেমেন্ট পদ্ধতি</label>
-          <select id="paymentMethod" class="form-select" required>
-            <option value="" selected disabled>পেমেন্ট পদ্ধতি নির্বাচন করুন</option>
-            <option value="bkash">bKash Manual Payment</option>
-            <option value="nagad">Nagad Manual Payment</option>
-          </select>
-          <div class="error-msg" id="paymentError">bKash অথবা Nagad নির্বাচন করুন।</div>
-        </div>
-
-        <div class="bkash-payment-box manual-payment-box hidden" id="manualPaymentBox">
-          <div class="bkash-header">
-            <div class="bkash-icon" id="paymentIcon">৳</div>
-            <div>
-              <h3 id="paymentBoxTitle">Manual Payment</h3>
-              <p id="paymentInstructions">Send Money করুন এবং Transaction ID দিন</p>
-            </div>
-          </div>
-          <div class="bkash-number-row">
-            <span id="paymentProviderLabel">Payment Number</span>
-            <strong id="paymentNumber">-</strong>
-          </div>
-          <div class="form-group" style="margin-bottom: 0;">
-            <label class="form-label" for="transactionId">Transaction ID / Txnid <span class="required">*</span></label>
-            <input type="text" id="transactionId" class="form-input" placeholder="যেমন: 9A7B6C5D4E">
-            <div class="error-msg" id="transactionError">Transaction ID লিখুন।</div>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="note">বিশেষ নোট (ঐচ্ছিক)</label>
-          <textarea id="note" class="form-textarea" placeholder="কোনো বিশেষ অনুরোধ থাকলে লিখুন..."></textarea>
-        </div>
-
-        <div class="order-summary" id="orderSummary">
-          <h4>📋 অর্ডার সামারি</h4>
-          <div class="summary-row">
-            <span>রুপালি আম</span>
-            <span><span id="summaryQty">-</span> কেজি</span>
-          </div>
-          <div class="summary-row">
-            <span>মূল্য/কেজি</span>
-            <span><span id="summaryPrice">-</span> টাকা</span>
-          </div>
-          <div class="summary-row total">
-            <span>মোট মূল্য</span>
-            <span id="summaryTotal">- টাকা</span>
-          </div>
-        </div>
-
-        <button type="submit" class="btn btn-primary btn-block btn-lg" id="submitBtn">
-          <span id="submitText">✅ অর্ডার কনফার্ম করুন</span>
-          <span id="submitSpinner" class="spinner hidden"></span>
-        </button>
-
-        <p style="text-align: center; margin-top: 12px; font-size: 13px; color: var(--gray-500);">
-          🔒 অর্ডার কনফার্ম করার পর আমাদের পক্ষ থেকে আপনার ফোনে যোগাযোগ করা হবে।
-        </p>
-      </form>
-
-      <div id="successView" class="success-container hidden">
-        <div class="success-icon">✅</div>
-        <h2 class="success-title">অর্ডার সফল হয়েছে!</h2>
-        <p class="success-msg">আপনার অর্ডার গ্রহণ করা হয়েছে। শীঘ্রই আমাদের পক্ষ থেকে ফোনে যোগাযোগ করা হবে।</p>
-        <div class="success-order-id" id="successOrderId">অর্ডার #--</div>
-        <button onclick="resetForm()" class="btn btn-outline" style="margin-right: 8px;">নতুন অর্ডার</button>
-        <a href="/" class="btn btn-primary">হোমে যান</a>
+    <form class="checkout-card checkout-form" id="checkoutForm" novalidate>
+      <div class="form-grid">
+        <label>নাম<input id="customerName" required placeholder="আপনার নাম"></label>
+        <label>ফোন<input id="phone" required placeholder="017XXXXXXXX"></label>
       </div>
-    </div>
-  </section>
-
-  <div class="toast" id="toast"></div>
-
-  <a href="https://wa.me/8801629518850?text=Assalamu%20Alaikum%2C%20I%20need%20help%20with%20my%20mango%20order" class="whatsapp-float" target="_blank" rel="noopener" aria-label="WhatsApp support">
-    <span>✆</span>
-    <strong>WhatsApp</strong>
-  </a>
-
-  <footer class="footer premium-footer modern-footer">
-    <div class="container footer-grid">
-      <div class="footer-company">
-        <div class="footer-brand">🥭 tazabazar.bd.com</div>
-        <p>প্রিমিয়াম আম সরাসরি বাগান থেকে আপনার দোরগোড়ায়।</p>
-        <span class="footer-owner-pill">Owner: মোঃ ইয়াসিন (MD Yeasin)</span>
-      </div>
-      <div class="footer-info-block">
-        <h4>Business Location</h4>
-        <p>Ramgarh, Khagrachhari</p>
-        <small>রামগড়, খাগড়াছড়ি</small>
-      </div>
-      <div class="footer-info-block footer-contact-links">
-        <h4>Contact</h4>
-        <a href="tel:01629518850">☎ ০১৬২৯৫১৮৮৫০</a>
-        <a href="https://wa.me/8801629518850" target="_blank" rel="noopener">WhatsApp Support</a>
-      </div>
-    </div>
-    <div class="container footer-bottom">
-      <span>&copy; ২০২৬ tazabazar.bd.com। সর্বস্বত্ব সংরক্ষিত।</span>
-      <span>Ramgarh, Khagrachhari</span>
-    </div>
-  </footer>
-
-  <script src="js/order.js"></script>
+      <label>ইমেইল (ঐচ্ছিক)<input id="email" type="email" placeholder="example@gmail.com"></label>
+      <label>ঠিকানা<textarea id="address" required placeholder="বিস্তারিত ঠিকানা"></textarea></label>
+      <label>পেমেন্ট পদ্ধতি<select id="paymentMethod" required><option value="" selected disabled>পেমেন্ট নির্বাচন করুন</option><option value="bkash">bKash Personal</option><option value="nagad">Nagad Personal</option></select></label>
+      <div class="payment-box hidden" id="paymentBox"><span id="paymentLabel">Payment Number</span><strong id="paymentNumber">-</strong><small>Send Money করে নিচে Transaction ID লিখুন।</small></div>
+      <label>Transaction ID / Txnid<input id="transactionId" required placeholder="Txnid লিখুন"></label>
+      <label>নোট (ঐচ্ছিক)<textarea id="note" placeholder="বিশেষ নির্দেশনা"></textarea></label>
+      <button class="btn btn-primary btn-block btn-lg" id="placeOrderBtn" disabled>Confirm Paid Order</button>
+      <div class="checkout-message" id="checkoutMessage"></div>
+    </form>
+  </main>
+  <a href="https://wa.me/8801629518850" class="whatsapp-float" target="_blank" rel="noopener">✆ <strong>WhatsApp</strong></a>
+  <script src="js/shop.js"></script>
 </body>
 </html>

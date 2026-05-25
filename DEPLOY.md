@@ -1,73 +1,47 @@
-# 🚀 tazabazar.bd.com — Render.com ডিপ্লয় গাইড
+# Render Deployment Guide — tazabazar.bd.com
 
-## ধাপ ১: GitHub-এ আপলোড করুন
+This build requires persistent storage for production data.
 
-1. https://github.com/new — নতুন রিপোজিটরি তৈরি করুন (নাম: `taza-bazar`)
-2. নিচের কমান্ডগুলো চালান:
+## Required Render settings
 
-```bash
-cd taza-bazar
-git init
-git add .
-git commit -m "tazabazar.bd.com - রুপালি আম অর্ডার ওয়েবসাইট"
-git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/taza-bazar.git
-git push -u origin main
+Use the included `render.yaml` Blueprint or configure manually:
+
+```yaml
+services:
+  - type: web
+    name: taza-bazar
+    env: node
+    plan: starter
+    buildCommand: npm install
+    startCommand: npm start
+    disk:
+      name: taza-bazar-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: DATA_DIR
+        value: /var/data
+      - key: SESSION_SECRET
+        generateValue: true
 ```
 
-## ধাপ ২: Render.com-এ ডিপ্লয়
+## Why this is critical
 
-1. https://render.com — সাইন আপ / লগইন করুন (GitHub দিয়ে)
-2. **New +** → **Web Service**
-3. আপনার `taza-bazar` রিপোজিটরি সিলেক্ট করুন
-4. নিচের সেটিংস দিন:
+All dynamic production data is written to:
 
-| সেটিং | মান |
-|--------|-----|
-| **Name** | `taza-bazar` |
-| **Runtime** | Node |
-| **Build Command** | `npm install` |
-| **Start Command** | `npm start` |
-| **Plan** | Free |
+```text
+/var/data/tazabazar-db.json
+/var/data/uploads
+/var/data/activity.log
+```
 
-5. **Environment Variables** যোগ করুন:
+Without a Render persistent disk mounted at `/var/data`, changes can reset on cold starts or redeploys.
 
-| Key | Value |
-|-----|-------|
-| `OWNER_PHONE` | `01629518850` |
-| `OWNER_EMAIL` | `hafezyeasin93@gmail.com` |
+## Admin login
 
-6. **Create Web Service** ক্লিক করুন
+```text
+Username: admin
+Password: Tazabazar@2026
+```
 
-⏳ ২-৩ মিনিট অপেক্ষা করুন। ডিপ্লয় হয়ে গেলে একটি URL পাবেন:
-`https://taza-bazar.onrender.com`
-
-## ধাপ ৩ (ঐচ্ছিক): ইমেইল ও SMS নোটিফিকেশন
-
-Render.com-এ Environment Variable হিসেবে যোগ করুন:
-
-> গুরুত্বপূর্ণ: Admin settings, uploaded images, price changes এবং password যেন restart/deploy-এর পরও থাকে, Render Persistent Disk mount path `/var/data` ব্যবহার করুন এবং `DATA_DIR=/var/data` রাখুন।
-
-**ইমেইলের জন্য (Gmail):**
-| Key | Value |
-|-----|-------|
-| `EMAIL_HOST` | `smtp.gmail.com` |
-| `EMAIL_PORT` | `587` |
-| `EMAIL_SECURE` | `false` |
-| `EMAIL_USER` | `আপনার-ইমেইল@gmail.com` |
-| `EMAIL_PASS` | `আপনার-app-password` |
-
-**SMS এর জন্য (Twilio):**
-| Key | Value |
-|-----|-------|
-| `TWILIO_ACCOUNT_SID` | `আপনার-sid` |
-| `TWILIO_AUTH_TOKEN` | `আপনার-token` |
-| `TWILIO_PHONE_NUMBER` | `+1234567890` |
-
----
-
-**অ্যাডমিন প্যানেল:** `https://taza-bazar.onrender.com/admin`
-**ডিফল্ট ইউজারনেম:** `admin`  
-**ডিফল্ট পাসওয়ার্ড:** `Tazabazar@2026` (সাথে সাথে বদলে ফেলুন!)
-
-প্রশ্ন থাকলে: ০১৬২৯৫১৮৮৫০ | hafezyeasin93@gmail.com
+The password is stored as a secure scrypt hash, not plain text.

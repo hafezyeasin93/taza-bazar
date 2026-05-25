@@ -1,8 +1,8 @@
 node_modules/
-data/orders.json
 .env
 .env.local
-
 data/uploads/
 data/activity.log
-data/settings.json.bak
+data/*.bak
+data/*tmp*
+data/orders.json
