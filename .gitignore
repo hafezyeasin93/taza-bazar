@@ -5,4 +5,6 @@ data/uploads/
 data/activity.log
 data/*.bak
 data/*tmp*
+data/tazabazar-db.json
 data/orders.json
+data/settings.json

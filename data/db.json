@@ -1,5 +1,6 @@
 {
-  "version": 2,
+  "version": 3,
+  "storage": "project-root-json",
   "site": {
     "name": "tazabazar.bd.com",
     "owner": "মোঃ ইয়াসিন (MD Yeasin)",
@@ -15,8 +16,8 @@
   },
   "auth": {
     "username": "admin",
-    "passwordHash": "e674102722804d53053d54e3ddd59d4bb5c25134a9caf5e43d1c9d7a53b7a84d51c70108a085ff640c9707d020a518f81ccdafffd06cd614c88c34afb3cf5b67",
-    "passwordSalt": "8bf183f3947144ba3950fc42b0a8db778689",
+    "passwordHash": "2418bb82b11363ad34de2bc5a1a00dbf0dd45206fdc97053322339dfb068d79a96fc6c8e7ac0bef0703dec9474e7b355b76e9408efcee4ae9530a754396e73ec",
+    "passwordSalt": "e587c9390f7d1ce2fe22d654b67799e8ce19",
     "passwordAlgorithm": "scrypt"
   },
   "products": {
@@ -50,6 +51,6 @@
     }
   },
   "orders": [],
-  "createdAt": "2026-05-25T15:41:11.005Z",
-  "updatedAt": "2026-05-25T15:41:11.005Z"
+  "createdAt": "2026-05-26T04:09:14.897Z",
+  "updatedAt": "2026-05-26T04:09:14.897Z"
 }

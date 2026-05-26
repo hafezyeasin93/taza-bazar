@@ -1,47 +1,37 @@
-# Render Deployment Guide — tazabazar.bd.com
+# Render Deploy — Root JSON Database Build
 
-This build requires persistent storage for production data.
+This emergency build avoids Render persistent disk mounts entirely.
 
-## Required Render settings
+## Important
 
-Use the included `render.yaml` Blueprint or configure manually:
+Do **not** set `DATA_DIR=/var/data`.
+Do **not** rely on `/var/data`.
 
-```yaml
-services:
-  - type: web
-    name: taza-bazar
-    env: node
-    plan: starter
-    buildCommand: npm install
-    startCommand: npm start
-    disk:
-      name: taza-bazar-data
-      mountPath: /var/data
-      sizeGB: 1
-    envVars:
-      - key: DATA_DIR
-        value: /var/data
-      - key: SESSION_SECRET
-        generateValue: true
-```
-
-## Why this is critical
-
-All dynamic production data is written to:
+The app always uses this root project file:
 
 ```text
-/var/data/tazabazar-db.json
-/var/data/uploads
-/var/data/activity.log
+./data/db.json
 ```
 
-Without a Render persistent disk mounted at `/var/data`, changes can reset on cold starts or redeploys.
+The committed `data/db.json` contains the default production configuration for both product cards, payment numbers, owner/address branding, blocked COD, and secure admin password hash.
 
-## Admin login
+## Render settings
+
+Use the included `render.yaml`:
+
+```yaml
+plan: free
+buildCommand: npm install
+startCommand: npm start
+```
+
+No disk mount is required.
+
+## Admin
 
 ```text
 Username: admin
 Password: Tazabazar@2026
 ```
 
-The password is stored as a secure scrypt hash, not plain text.
+The password is verified server-side against a scrypt hash.

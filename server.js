@@ -8,8 +8,10 @@ const crypto = require('crypto');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const DATA_DIR = process.env.DATA_DIR || (fs.existsSync('/var/data') ? '/var/data' : path.join(__dirname, 'data'));
-const DB_FILE = path.join(DATA_DIR, 'tazabazar-db.json');
+// Emergency Render-free-tier strategy: keep the database inside the project root.
+// This intentionally ignores /var/data and DATA_DIR so the deployed app always boots from ./data/db.json.
+const DATA_DIR = path.join(__dirname, 'data');
+const DB_FILE = path.join(DATA_DIR, 'db.json');
 const LOG_FILE = path.join(DATA_DIR, 'activity.log');
 const UPLOADS_DIR = path.join(DATA_DIR, 'uploads');
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
@@ -244,7 +246,7 @@ function publicDB(db) {
     payments: db.payments,
     products: db.products,
     trustBanner: db.site.trustBanner,
-    storage: { persistentPath: DATA_DIR }
+    storage: { rootDataPath: DATA_DIR, databaseFile: DB_FILE }
   };
 }
 
@@ -276,7 +278,7 @@ function init() {
 
 // Public API
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', name: 'tazabazar.bd.com API', dataDir: DATA_DIR, persistent: DATA_DIR === '/var/data' || DATA_DIR.startsWith('/var/data') });
+  res.json({ status: 'ok', name: 'tazabazar.bd.com API', dataDir: DATA_DIR, databaseFile: DB_FILE, storage: 'project-root-json' });
 });
 
 app.get('/api/site', (req, res) => {
@@ -343,14 +345,14 @@ app.post('/api/admin/logout', (req, res) => {
 app.get('/api/admin/me', (req, res) => {
   if (!requireAdmin(req, res)) return;
   const db = loadDB();
-  res.json({ username: db.auth.username, sessionDays: 30, dataDir: DATA_DIR, persistentDisk: DATA_DIR === '/var/data' || DATA_DIR.startsWith('/var/data') });
+  res.json({ username: db.auth.username, sessionDays: 30, dataDir: DATA_DIR, databaseFile: DB_FILE, storage: 'project-root-json' });
 });
 
 // Admin data
 app.get('/api/admin/dashboard', (req, res) => {
   if (!requireAdmin(req, res)) return;
   const db = loadDB();
-  res.json({ products: db.products, orders: db.orders, logs: readLogs(100), site: db.site, payments: db.payments, dataDir: DATA_DIR });
+  res.json({ products: db.products, orders: db.orders, logs: readLogs(100), site: db.site, payments: db.payments, dataDir: DATA_DIR, databaseFile: DB_FILE });
 });
 
 app.get('/api/admin/orders', (req, res) => {
@@ -453,6 +455,6 @@ app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin.html'))
 init();
 app.listen(PORT, () => {
   console.log('\n✅ tazabazar.bd.com running on http://localhost:' + PORT);
-  console.log('💾 DATA_DIR:', DATA_DIR);
+  console.log('💾 Root JSON DB:', DB_FILE);
   console.log('🔐 Admin:', ADMIN_USERNAME, '(password hashed with scrypt)\n');
 });

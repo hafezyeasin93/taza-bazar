@@ -1,19 +1,26 @@
 # tazabazar.bd.com Premium E-commerce
 
-A secure premium fruit e-commerce site for Ramgarh, Khagrachhari with two product categories:
+Emergency Render-free-tier build using a root local JSON database committed with the project.
 
-- খাগড়াছড়ির প্রিমিয়াম আম
-- খাগড়াছড়ির প্রিমিয়াম চায়না-৩ লিচু
+## Root database strategy
 
-## Production architecture
+The server intentionally does **not** use `/var/data` or `DATA_DIR`.
+It always boots from:
 
-- Express.js server
-- Persistent JSON database at `DATA_DIR` (`/var/data` on Render)
-- Product images stored under `/var/data/uploads`
-- Admin password hashed with Node.js `crypto.scryptSync`
-- 30-day signed HttpOnly admin session cookie
-- Manual advance payment only: bKash and Nagad
-- COD is disabled and server-blocked
+```text
+./data/db.json
+```
+
+This file is pre-populated with:
+
+- খাগড়াছড়ির প্রিমিয়াম আম (Premium Mango)
+- খাগড়াছড়ির প্রিমিয়াম চায়না-৩ লিচু (Premium China-3 Litchi)
+- bKash Personal: `01891548610`
+- Nagad Personal: `01629518850`
+- COD disabled/server-blocked
+- Owner: `মোঃ ইয়াসিন (MD Yeasin)`
+- Address: `Ramgarh, Khagrachhari`
+- Trust banner text
 
 ## Admin credentials
 
@@ -22,35 +29,15 @@ Username: admin
 Password: Tazabazar@2026
 ```
 
-Change the password through the Admin panel after deployment if desired.
+The admin password is stored in `data/db.json` as a secure scrypt hash, not plain text.
 
-## Payment numbers
+## Session
 
-```text
-bKash Personal: 01891548610
-Nagad Personal: 01629518850
-```
-
-## Render persistence
-
-The included `render.yaml` mounts a persistent disk:
-
-```yaml
-mountPath: /var/data
-DATA_DIR: /var/data
-```
-
-All orders, product edits, image uploads, slider settings, and logs are written to `/var/data/tazabazar-db.json` and `/var/data/uploads`, so data survives server sleep/restarts and redeploys when Render persistent disk is active.
+Admin login uses a signed 30-day HttpOnly cookie.
 
 ## Run locally
 
 ```bash
 npm install
 npm start
-```
-
-Optional local persistent data path:
-
-```bash
-DATA_DIR=/tmp/tazabazar-data npm start
 ```
