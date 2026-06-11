@@ -1,89 +1,108 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="tazabazar.bd.com - Ramgarh, Khagrachhari premium mango and China-3 litchi with secure advance bKash/Nagad payment.">
-  <meta name="theme-color" content="#0f3d2e">
-  <title>tazabazar.bd.com | Premium Hill Tracts Fruits</title>
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥭</text></svg>">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>WorldCup 2026 - Premium Streaming</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- HLS.js for m3u8 support -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="luxury-site">
-  <nav class="luxury-nav">
-    <a href="/" class="luxury-brand"><span>🥭</span><strong>tazabazar.bd.com</strong></a>
-    <div class="luxury-nav-links">
-      <a href="#products">Products</a>
-      <a href="#trust">Payment</a>
-      <button class="cart-open-btn" onclick="openCart()">🛒 Cart <b id="cartCount">0</b></button>
-      <a href="/admin">Admin</a>
-    </div>
-  </nav>
+<body>
 
-  <header class="luxury-hero">
-    <div class="hero-copy">
-      <span class="gold-pill">Ramgarh • Khagrachhari Harvest</span>
-      <h1>Premium Hill Tracts Fruits Delivered with Trust</h1>
-      <p>খাগড়াছড়ির প্রিমিয়াম আম ও চায়না-৩ লিচু—পরিষ্কার প্যাকেজিং, নিরাপদ অগ্রিম পেমেন্ট এবং দ্রুত অর্ডার কনফার্মেশন।</p>
-      <div class="hero-actions">
-        <a href="#products" class="btn btn-primary btn-lg">Shop Premium Fruits</a>
-        <button class="btn btn-outline btn-lg" onclick="openCart()">View Cart</button>
-      </div>
-    </div>
-    <div class="hero-showcase" id="heroShowcase">
-      <div class="fruit-orb">🥭</div>
-      <div class="hero-card"><strong>100%</strong><span>Secure Advance Payment</span></div>
-      <div class="hero-card second"><strong>2</strong><span>Premium Categories</span></div>
-    </div>
-  </header>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="logo">
+            <span class="gold-text">WORLD</span><span class="neon-text">CUP</span> <small>2026</small>
+        </div>
+        <div class="header-icons">
+            <i class="fas fa-search"></i>
+            <i class="fas fa-user-circle"></i>
+        </div>
+    </header>
 
-  <main>
-    <section class="trust-announcement" id="trust">
-      <div class="trust-announcement-card">
-        <span>🛡️</span>
-        <p>নিরাপদ পেমেন্ট — ১০০% নিরাপদ অগ্রিম পেমেন্ট। বিকাশ বা নগদের মাধ্যমে পেমেন্ট করে ট্রানজেকশন আইডি দিয়ে আপনার অর্ডারটি নিশ্চিত করুন।</p>
-      </div>
-    </section>
+    <!-- Main Content Area -->
+    <main id="app-content">
+        <!-- Home Section: Fixtures -->
+        <section id="home-section" class="page active">
+            <div class="section-title">
+                <h2>Match Center</h2>
+                <p>Upcoming & Live Fixtures</p>
+            </div>
+            <div id="fixture-list" class="fixture-list">
+                <!-- Fixtures will be injected here by JS -->
+                <div class="loading">Loading matches...</div>
+            </div>
+        </section>
 
-    <section class="luxury-section" id="products">
-      <div class="section-heading">
-        <span class="gold-pill">Premium Product Grid</span>
-        <h2>খাগড়াছড়ির নির্বাচিত ফল</h2>
-        <p>প্রতিটি প্রোডাক্ট আলাদা stock, price, badge এবং image control সহ admin panel থেকে পরিচালনাযোগ্য।</p>
-      </div>
-      <div class="product-grid" id="productGrid"></div>
-    </section>
+        <!-- Live Streaming Section -->
+        <section id="stream-section" class="page">
+            <div class="player-container">
+                <div class="video-wrapper">
+                    <video id="video-player" controls playsinline></video>
+                    <div id="live-overlay" class="live-overlay">LIVE</div>
+                </div>
+                
+                <div class="player-controls">
+                    <div class="match-info">
+                        <h3 id="current-match-title">Match Title</h3>
+                        <span id="current-match-group">Group A</span>
+                    </div>
+                    
+                    <div class="quality-selector">
+                        <button class="q-btn active" data-quality="HD">HD LIVE</button>
+                        <button class="q-btn" data-quality="LIVE1">LIVE 1</button>
+                        <button class="q-btn" data-quality="SD">LIVE SD</button>
+                    </div>
+                </div>
+                
+                <div class="player-actions">
+                    <button id="pip-btn"><i class="fas fa-external-link-alt"></i> PiP</button>
+                    <button id="fullscreen-btn"><i class="fas fa-expand"></i> Fullscreen</button>
+                </div>
+            </div>
+            <button class="back-btn" onclick="navigateTo('home-section')">
+                <i class="fas fa-arrow-left"></i> Back to Fixtures
+            </button>
+        </section>
 
-    <section class="contact-band">
-      <div><strong>Owner</strong><span>মোঃ ইয়াসিন (MD Yeasin)</span></div>
-      <div><strong>Address</strong><span>Ramgarh, Khagrachhari</span></div>
-      <div><strong>Support</strong><a href="tel:01629518850">01629518850</a></div>
-    </section>
-  </main>
+        <!-- Highlights Section -->
+        <section id="highlights-section" class="page">
+            <div class="section-title">
+                <h2>Highlights</h2>
+                <p>Relive the best moments</p>
+            </div>
+            <div class="highlights-grid">
+                <div class="highlight-card">
+                    <div class="thumb"><span>Coming Soon</span></div>
+                    <div class="card-info">Opening Ceremony 2026</div>
+                </div>
+                <div class="highlight-card">
+                    <div class="thumb"><span>Coming Soon</span></div>
+                    <div class="card-info">Top Goals of the Day</div>
+                </div>
+            </div>
+        </section>
+    </main>
 
-  <aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
-    <div class="cart-panel">
-      <div class="cart-head"><h2>Premium Cart</h2><button onclick="closeCart()">×</button></div>
-      <div class="cart-items" id="cartItems"></div>
-      <div class="cart-summary">
-        <div><span>Subtotal</span><strong id="cartTotal">৳0</strong></div>
-        <a href="/order" class="btn btn-primary btn-block">Proceed to Secure Checkout</a>
-      </div>
-    </div>
-  </aside>
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="navigateTo('home-section')" data-page="home-section">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </div>
+        <div class="nav-item" onclick="navigateTo('stream-section')" data-page="stream-section">
+            <i class="fas fa-play-circle"></i>
+            <span>Live</span>
+        </div>
+        <div class="nav-item" onclick="navigateTo('highlights-section')" data-page="highlights-section">
+            <i class="fas fa-film"></i>
+            <span>Highlights</span>
+        </div>
+    </nav>
 
-  <a href="https://wa.me/8801629518850?text=Assalamu%20Alaikum%2C%20I%20need%20help%20with%20my%20order" class="whatsapp-float" target="_blank" rel="noopener">✆ <strong>WhatsApp</strong></a>
-
-  <footer class="corporate-footer">
-    <div class="footer-grid">
-      <div><h3>🥭 tazabazar.bd.com</h3><p>Premium Hill Tracts Fruits E-commerce</p></div>
-      <div><strong>Owner Name</strong><p>মোঃ ইয়াসিন (MD Yeasin)</p></div>
-      <div><strong>Business Address</strong><p>Ramgarh, Khagrachhari<br>রামগড়, খাগড়াছড়ি</p></div>
-      <div><strong>Payment</strong><p>bKash: 01891548610<br>Nagad: 01629518850</p></div>
-    </div>
-    <small>© ২০২৬ tazabazar.bd.com — Secure advance payment only.</small>
-  </footer>
-
-  <script src="js/shop.js"></script>
+    <script src="js/script.js"></script>
 </body>
 </html>
