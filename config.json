@@ -11,9 +11,9 @@
       "startTime": "2026-06-11T18:00:00Z",
       "status": "live",
       "streams": {
-        "HD": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+        "HD": "https://demo.unified-streaming.com/k8s/features/stable/video/index.m3u8",
         "LIVE1": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
-        "SD": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
+        "SD": "https://demo.unified-streaming.com/k8s/features/stable/video/index.m3u8"
       }
     },
     {
@@ -32,15 +32,15 @@
     {
       "id": "c1",
       "match": "India vs Australia",
-      "tournament": "World Test Championship",
+      "tournament": "ICC World Test Championship",
       "score": "IND 245/3 (62.1)",
       "status": "LIVE",
-      "stream": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
+      "stream": "https://demo.unified-streaming.com/k8s/features/stable/video/index.m3u8"
     },
     {
       "id": "c2",
       "match": "England vs South Africa",
-      "tournament": "T20 Series",
+      "tournament": "International T20",
       "score": "ENG 120/2 (15.0)",
       "status": "LIVE",
       "stream": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
@@ -48,18 +48,18 @@
   ],
   "channels": {
     "Sports": [
-      { "name": "ESPN Premium", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-      { "name": "Sky Sports", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-      { "name": "Fox Sports", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
+      { "name": "ESPN Premium", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://demo.unified-streaming.com/k8s/features/stable/video/index.m3u8" },
+      { "name": "Sky Sports Live", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
+      { "name": "Fox Sports HD", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://demo.unified-streaming.com/k8s/features/stable/video/index.m3u8" }
     ],
-    "News": [
-      { "name": "BBC World News", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-      { "name": "CNN International", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-      { "name": "Al Jazeera", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
+    "OTT Networks": [
+      { "name": "Disney+ Hotstar", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
+      { "name": "SonyLiv Premium", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://demo.unified-streaming.com/k8s/features/stable/video/index.m3u8" },
+      { "name": "JioCinema Live", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
     ],
-    "Entertainment": [
-      { "name": "HBO Max Live", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-      { "name": "Netflix Live Events", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
+    "Global News": [
+      { "name": "BBC World", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://demo.unified-streaming.com/k8s/features/stable/video/index.m3u8" },
+      { "name": "CNN Live", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
     ]
   }
 }

@@ -1,27 +1,66 @@
 document.addEventListener('DOMContentLoaded', () => {
-    let matchData = [];
-    let currentMatch = null;
+    let appData = {};
     const video = document.getElementById('video-player');
     let hls = new Hls();
+
+    // GLOBAL NAVIGATION SYSTEM
+    window.navigateTo = (pageId) => {
+        console.log(`Navigating to: ${pageId}`);
+        
+        // 1. Hide all pages
+        document.querySelectorAll('.page').forEach(p => {
+            p.classList.remove('active');
+        });
+
+        // 2. Show target page
+        const targetPage = document.getElementById(pageId);
+        if (targetPage) {
+            targetPage.classList.add('active');
+        } else {
+            console.error(`Page ${pageId} not found`);
+        }
+
+        // 3. Update Bottom Nav UI
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.remove('active');
+            if (item.getAttribute('data-page') === pageId) {
+                item.classList.add('active');
+            }
+        });
+
+        // 4. Stop video when leaving stream page
+        if (pageId !== 'stream-section') {
+            video.pause();
+        }
+    };
+
+    // INITIALIZE NAV EVENT LISTENERS
+    function initNav() {
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.onclick = () => {
+                const page = item.getAttribute('data-page');
+                navigateTo(page);
+            };
+        });
+    }
 
     async function loadConfig() {
         try {
             const response = await fetch('config.json');
-            const data = await response.json();
-            matchData = data;
+            appData = await response.json();
             renderHome();
             renderChannels();
         } catch (error) {
-            console.error("Config load error:", error);
-            document.getElementById('fixture-list').innerHTML = '<div class="error">Failed to sync with server.</div>';
+            console.error("Configuration load error:", error);
+            document.getElementById('fixture-list').innerHTML = '<div class="error">Sync failed. Please refresh.</div>';
         }
     }
 
     function renderHome() {
-        // 1. Render Cricket
+        // Cricket Live Section
         const cricketContainer = document.getElementById('cricket-list');
         cricketContainer.innerHTML = '';
-        matchData.cricket.forEach(c => {
+        appData.cricket.forEach(c => {
             const card = document.createElement('div');
             card.className = 'cricket-card';
             card.innerHTML = `
@@ -34,10 +73,10 @@ document.addEventListener('DOMContentLoaded', () => {
             cricketContainer.appendChild(card);
         });
 
-        // 2. Render Fixtures
+        // World Cup Fixtures
         const fixtureList = document.getElementById('fixture-list');
         fixtureList.innerHTML = '';
-        matchData.matches.forEach(m => {
+        appData.matches.forEach(m => {
             const isLive = m.status === 'live';
             const card = document.createElement('div');
             card.className = 'match-card';
@@ -69,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const container = document.getElementById('channels-container');
         container.innerHTML = '';
         
-        for (const [category, channels] of Object.entries(matchData.channels)) {
+        for (const [category, channels] of Object.entries(appData.channels)) {
             const catDiv = document.createElement('div');
             catDiv.className = 'channel-cat';
             catDiv.innerHTML = `<div class="cat-title">${category}</div>`;
@@ -97,28 +136,15 @@ document.addEventListener('DOMContentLoaded', () => {
         return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     }
 
-    window.navigateTo = (pageId) => {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById(pageId).classList.add('active');
-        
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.classList.remove('active');
-            if(item.dataset.page === pageId) item.classList.add('active');
-        });
-
-        if (pageId !== 'stream-section') video.pause();
-    };
-
     function openStream(title, group, url) {
+        if (!url) {
+            alert("This stream is temporarily unavailable. Please check back soon.");
+            return;
+        }
+        
         navigateTo('stream-section');
         document.getElementById('current-match-title').innerText = title;
         document.getElementById('current-match-group').innerText = group;
-        
-        if (!url) {
-            alert("Stream link is currently unavailable. Please try again later.");
-            navigateTo('home-section');
-            return;
-        }
         
         playHls(url);
     }
@@ -136,12 +162,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Player Buttons
     document.querySelectorAll('.q-btn').forEach(btn => {
         btn.onclick = () => {
             document.querySelectorAll('.q-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            // For this demo, we use the same stream, but in production, 
-            // you would fetch the specific quality URL from config.json
+            // Quality logic would go here (switching HLS levels)
         };
     });
 
@@ -149,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             if (document.pictureInPictureElement) await document.exitPictureInPicture();
             else await video.requestPictureInPicture();
-        } catch (e) { alert("PiP not supported"); }
+        } catch (e) { alert("PiP not supported on this device"); }
     };
 
     document.getElementById('fullscreen-btn').onclick = () => {
@@ -157,5 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (video.webkitRequestFullscreen) video.webkitRequestFullscreen();
     };
 
+    // Bootstrap App
+    initNav();
     loadConfig();
 });

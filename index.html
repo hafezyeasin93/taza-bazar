@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WorldCup 2026 - Premium OTT</title>
+    <title>WorldCup 2026 - Ultra Premium OTT</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#39FF14">
@@ -23,40 +23,79 @@
     </header>
 
     <main id="app-content">
-        <!-- Home Section -->
+        <!-- HOME SECTION -->
         <section id="home-section" class="page active">
-            <!-- CRICKET LIVE SECTION -->
             <div class="premium-banner">
                 <div class="banner-header">
                     <span class="live-tag">CRICKET LIVE</span>
                     <i class="fas fa-baseball-bat-ball"></i>
                 </div>
                 <div id="cricket-list" class="cricket-container">
-                    <!-- Cricket matches injected here -->
+                    <div class="loading">Fetching Live Scores...</div>
                 </div>
             </div>
 
             <div class="section-title">
-                <h2>Match Center</h2>
-                <p>FIFA World Cup Fixtures</p>
+                <h2>World Cup Center</h2>
+                <p>Official 2026 Match Schedule</p>
             </div>
             <div id="fixture-list" class="fixture-list">
-                <div class="loading">Syncing matches...</div>
+                <div class="loading">Syncing fixtures...</div>
             </div>
         </section>
 
-        <!-- Channels Section -->
+        <!-- CHANNELS SECTION -->
         <section id="channels-section" class="page">
             <div class="section-title">
-                <h2>Global OTT Directory</h2>
-                <p>Premium TV & Streaming Channels</p>
+                <h2>OTT & TV Directory</h2>
+                <p>Premium Global Streaming Channels</p>
             </div>
             <div id="channels-container" class="channels-container">
-                <!-- Categories and channels injected here -->
+                <div class="loading">Loading directory...</div>
             </div>
         </section>
 
-        <!-- Stream Player Section -->
+        <!-- SETTINGS SECTION -->
+        <section id="settings-section" class="page">
+            <div class="section-title">
+                <h2>App Settings</h2>
+                <p>Manage your experience</p>
+            </div>
+            <div class="settings-list">
+                <div class="setting-item">
+                    <div class="set-info">
+                        <i class="fas fa-video"></i>
+                        <span>Default Quality</span>
+                    </div>
+                    <select class="set-select">
+                        <option>HD (Auto)</option>
+                        <option>SD (Data Saver)</option>
+                    </select>
+                </div>
+                <div class="setting-item">
+                    <div class="set-info">
+                        <i class="fas fa-bell"></i>
+                        <span>Match Notifications</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <div class="set-info">
+                        <i class="fas fa-moon"></i>
+                        <span>Dark Mode</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <!-- PLAYER SECTION -->
         <section id="stream-section" class="page">
             <div class="player-container">
                 <div class="video-wrapper">
@@ -65,8 +104,8 @@
                 </div>
                 <div class="player-controls">
                     <div class="match-info">
-                        <h3 id="current-match-title">Streaming...</h3>
-                        <span id="current-match-group">Premium Channel</span>
+                        <h3 id="current-match-title">Stream loading...</h3>
+                        <span id="current-match-group">Loading channel...</span>
                     </div>
                     <div class="quality-selector">
                         <button class="q-btn active" data-quality="HD">HD LIVE</button>
@@ -83,34 +122,20 @@
                 <i class="fas fa-arrow-left"></i> Back to Dashboard
             </button>
         </section>
-
-        <!-- Highlights Section -->
-        <section id="highlights-section" class="page">
-            <div class="section-title">
-                <h2>Highlights</h2>
-                <p>Top moments and goals</p>
-            </div>
-            <div class="highlights-grid">
-                <div class="highlight-card">
-                    <div class="thumb"><span>Coming Soon</span></div>
-                    <div class="card-info">Match Highlights</div>
-                </div>
-            </div>
-        </section>
     </main>
 
     <nav class="bottom-nav">
-        <div class="nav-item active" onclick="navigateTo('home-section')" data-page="home-section">
+        <div class="nav-item active" data-page="home-section">
             <i class="fas fa-home"></i>
             <span>Home</span>
         </div>
-        <div class="nav-item" onclick="navigateTo('channels-section')" data-page="channels-section">
+        <div class="nav-item" data-page="channels-section">
             <i class="fas fa-tv"></i>
             <span>Channels</span>
         </div>
-        <div class="nav-item" onclick="navigateTo('highlights-section')" data-page="highlights-section">
-            <i class="fas fa-film"></i>
-            <span>Highlights</span>
+        <div class="nav-item" data-page="settings-section">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
         </div>
     </nav>
 
