@@ -2,7 +2,7 @@ name: Android APK Build
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, worldcup-app ]
   workflow_dispatch:
 
 jobs:
@@ -19,26 +19,28 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
       - name: Install Cordova
         run: npm install -g cordova
 
       - name: Create Cordova Project
         run: |
-          cordova create worldcup_app com.tazabazar.worldcup WorldCup2026
-          cd worldcup_app
+          cordova create build_dir com.worldcup.live "WorldCup 2026"
+          cp -r worldcup_app/* build_dir/www/
+          cd build_dir
           cordova platform add android
 
-      - name: Copy Source Files
+      - name: Build APK
         run: |
-          cp -r worldcup_app_bundle/* worldcup_app/www/ || cp -r * worldcup_app/www/ || true
+          cd build_dir
+          cordova build android
 
-      - name: Build Android APK
-        run: |
-          cd worldcup_app
-          cordova build android --apk
-
-      - name: Upload APK Artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v3
         with:
           name: WorldCup-2026-App
-          path: worldcup_app/platforms/android/app/build/outputs/apk/debug/app-debug.apk
+          path: build_dir/platforms/android/app/build/outputs/apk/debug/*.apk

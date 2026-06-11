@@ -1,0 +1,53 @@
+{
+  "matches": [
+    {
+      "id": "m1",
+      "teamA": "USA",
+      "teamB": "Mexico",
+      "flagA": "https://flagcdn.com/w80/us.png",
+      "flagB": "https://flagcdn.com/w80/mx.png",
+      "group": "Group A",
+      "startTime": "2026-06-11T18:00:00Z",
+      "status": "live",
+      "streams": {
+        "HD": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+        "LIVE1": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+        "SD": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
+      }
+    },
+    {
+      "id": "m2",
+      "teamA": "Argentina",
+      "teamB": "France",
+      "flagA": "https://flagcdn.com/w80/ar.png",
+      "flagB": "https://flagcdn.com/w80/fr.png",
+      "group": "Group C",
+      "startTime": "2026-06-12T20:00:00Z",
+      "status": "upcoming",
+      "streams": {
+        "HD": "",
+        "LIVE1": "",
+        "SD": ""
+      }
+    },
+    {
+      "id": "m3",
+      "teamA": "Brazil",
+      "teamB": "Morocco",
+      "flagA": "https://flagcdn.com/w80/br.png",
+      "flagB": "https://flagcdn.com/w80/ma.png",
+      "group": "Group J",
+      "startTime": "2026-06-13T14:00:00Z",
+      "status": "upcoming",
+      "streams": {
+        "HD": "",
+        "LIVE1": "",
+        "SD": ""
+      }
+    }
+  ],
+  "settings": {
+    "appName": "WorldCup 2026 Live",
+    "maintenanceMode": false
+  }
+}

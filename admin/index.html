@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - WorldCup 2026</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        body { background: #111; padding: 20px; }
+        .admin-container { max-width: 800px; margin: 0 auto; }
+        .admin-card { background: #1a1a2e; padding: 20px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #333; }
+        .form-group { margin-bottom: 15px; display: flex; flex-direction: column; gap: 5px; }
+        input, select { background: #0a0a12; border: 1px solid #333; color: white; padding: 10px; border-radius: 5px; }
+        .btn-save { background: var(--accent-neon); color: black; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .match-item-admin { background: #252538; padding: 10px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .btn-delete { background: var(--live-red); color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="section-title">
+            <h2>Stream Admin Panel</h2>
+            <p>Manage match schedules and live links</p>
+        </div>
+
+        <div class="admin-card">
+            <h3>Add New Match</h3>
+            <div class="form-group">
+                <label>Team A</label>
+                <input type="text" id="teamA" placeholder="e.g. Brazil">
+            </div>
+            <div class="form-group">
+                <label>Team B</label>
+                <input type="text" id="teamB" placeholder="e.g. Morocco">
+            </div>
+            <div class="form-group">
+                <label>Group</label>
+                <input type="text" id="group" placeholder="e.g. Group J">
+            </div>
+            <div class="form-group">
+                <label>Start Time</label>
+                <input type="datetime-local" id="startTime">
+            </div>
+            <div class="form-group">
+                <label>HD Stream Link (.m3u8)</label>
+                <input type="text" id="hdLink" placeholder="https://...">
+            </div>
+            <button class="btn-save" onclick="addMatch()">Add Match to Schedule</button>
+        </div>
+
+        <div class="admin-card">
+            <h3>Current Schedule</h3>
+            <div id="admin-match-list">
+                <!-- Matches will appear here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let matches = [];
+
+        async function loadMatches() {
+            const response = await fetch('../config.json');
+            const data = await response.json();
+            matches = data.matches;
+            renderAdminList();
+        }
+
+        function renderAdminList() {
+            const list = document.getElementById('admin-match-list');
+            list.innerHTML = '';
+            matches.forEach((m, index) => {
+                const item = document.createElement('div');
+                item.className = 'match-item-admin';
+                item.innerHTML = `
+                    <span>${m.teamA} vs ${m.teamB} (${m.group})</span>
+                    <button class="btn-delete" onclick="deleteMatch(${index})">Remove</button>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function addMatch() {
+            const newMatch = {
+                id: 'm' + Date.now(),
+                teamA: document.getElementById('teamA').value,
+                teamB: document.getElementById('teamB').value,
+                group: document.getElementById('group').value,
+                startTime: new Date(document.getElementById('startTime').value).toISOString(),
+                status: 'upcoming',
+                streams: {
+                    HD: document.getElementById('hdLink').value,
+                    LIVE1: document.getElementById('hdLink').value,
+                    SD: document.getElementById('hdLink').value
+                }
+            };
+            matches.push(newMatch);
+            renderAdminList();
+            alert("Match added locally. In a production app, this would update the JSON file on the server.");
+        }
+
+        function deleteMatch(index) {
+            matches.splice(index, 1);
+            renderAdminList();
+        }
+
+        loadMatches();
+    </script>
+</body>
+</html>
