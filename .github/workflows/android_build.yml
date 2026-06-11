@@ -1,5 +1,5 @@
-
 name: Android APK Build
+
 on:
   push:
     branches: [ main, worldcup-app ]
@@ -8,6 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -18,7 +19,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Set up Node.js
+      - name: Install Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
@@ -26,16 +27,19 @@ jobs:
       - name: Install Cordova
         run: npm install -g cordova
 
-      - name: Build Android APK
+      - name: Create Cordova Project
         run: |
           cordova create build_dir com.worldcup.live "WorldCup 2026"
-          cp -r . build_dir/www/
-          rm -rf build_dir/www/build_dir
+          cp -r worldcup_app/* build_dir/www/
           cd build_dir
           cordova platform add android
+
+      - name: Build APK
+        run: |
+          cd build_dir
           cordova build android
 
-      - name: Upload APK Artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v3
         with:
           name: WorldCup-2026-App

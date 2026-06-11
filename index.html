@@ -3,68 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WorldCup 2026 - Premium Streaming</title>
+    <title>WorldCup 2026 - Premium OTT</title>
     <link rel="stylesheet" href="css/style.css">
-    <!-- HLS.js for m3u8 support -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#39FF14">
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-    <!-- Header -->
     <header class="app-header">
         <div class="logo">
             <span class="gold-text">WORLD</span><span class="neon-text">CUP</span> <small>2026</small>
         </div>
         <div class="header-icons">
-            <i class="fas fa-search"></i>
+            <i class="fas fa-bell notification-bell"></i>
             <i class="fas fa-user-circle"></i>
         </div>
     </header>
 
-    <!-- Main Content Area -->
     <main id="app-content">
-        <!-- Home Section: Fixtures -->
+        <!-- Home Section -->
         <section id="home-section" class="page active">
+            <!-- CRICKET LIVE SECTION -->
+            <div class="premium-banner">
+                <div class="banner-header">
+                    <span class="live-tag">CRICKET LIVE</span>
+                    <i class="fas fa-baseball-bat-ball"></i>
+                </div>
+                <div id="cricket-list" class="cricket-container">
+                    <!-- Cricket matches injected here -->
+                </div>
+            </div>
+
             <div class="section-title">
                 <h2>Match Center</h2>
-                <p>Upcoming & Live Fixtures</p>
+                <p>FIFA World Cup Fixtures</p>
             </div>
             <div id="fixture-list" class="fixture-list">
-                <!-- Fixtures will be injected here by JS -->
-                <div class="loading">Loading matches...</div>
+                <div class="loading">Syncing matches...</div>
             </div>
         </section>
 
-        <!-- Live Streaming Section -->
+        <!-- Channels Section -->
+        <section id="channels-section" class="page">
+            <div class="section-title">
+                <h2>Global OTT Directory</h2>
+                <p>Premium TV & Streaming Channels</p>
+            </div>
+            <div id="channels-container" class="channels-container">
+                <!-- Categories and channels injected here -->
+            </div>
+        </section>
+
+        <!-- Stream Player Section -->
         <section id="stream-section" class="page">
             <div class="player-container">
                 <div class="video-wrapper">
                     <video id="video-player" controls playsinline></video>
                     <div id="live-overlay" class="live-overlay">LIVE</div>
                 </div>
-                
                 <div class="player-controls">
                     <div class="match-info">
-                        <h3 id="current-match-title">Match Title</h3>
-                        <span id="current-match-group">Group A</span>
+                        <h3 id="current-match-title">Streaming...</h3>
+                        <span id="current-match-group">Premium Channel</span>
                     </div>
-                    
                     <div class="quality-selector">
                         <button class="q-btn active" data-quality="HD">HD LIVE</button>
                         <button class="q-btn" data-quality="LIVE1">LIVE 1</button>
                         <button class="q-btn" data-quality="SD">LIVE SD</button>
                     </div>
                 </div>
-                
                 <div class="player-actions">
                     <button id="pip-btn"><i class="fas fa-external-link-alt"></i> PiP</button>
                     <button id="fullscreen-btn"><i class="fas fa-expand"></i> Fullscreen</button>
                 </div>
             </div>
             <button class="back-btn" onclick="navigateTo('home-section')">
-                <i class="fas fa-arrow-left"></i> Back to Fixtures
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
             </button>
         </section>
 
@@ -72,30 +88,25 @@
         <section id="highlights-section" class="page">
             <div class="section-title">
                 <h2>Highlights</h2>
-                <p>Relive the best moments</p>
+                <p>Top moments and goals</p>
             </div>
             <div class="highlights-grid">
                 <div class="highlight-card">
                     <div class="thumb"><span>Coming Soon</span></div>
-                    <div class="card-info">Opening Ceremony 2026</div>
-                </div>
-                <div class="highlight-card">
-                    <div class="thumb"><span>Coming Soon</span></div>
-                    <div class="card-info">Top Goals of the Day</div>
+                    <div class="card-info">Match Highlights</div>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Bottom Navigation -->
     <nav class="bottom-nav">
         <div class="nav-item active" onclick="navigateTo('home-section')" data-page="home-section">
             <i class="fas fa-home"></i>
             <span>Home</span>
         </div>
-        <div class="nav-item" onclick="navigateTo('stream-section')" data-page="stream-section">
-            <i class="fas fa-play-circle"></i>
-            <span>Live</span>
+        <div class="nav-item" onclick="navigateTo('channels-section')" data-page="channels-section">
+            <i class="fas fa-tv"></i>
+            <span>Channels</span>
         </div>
         <div class="nav-item" onclick="navigateTo('highlights-section')" data-page="highlights-section">
             <i class="fas fa-film"></i>

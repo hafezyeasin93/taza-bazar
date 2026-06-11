@@ -4,142 +4,157 @@ document.addEventListener('DOMContentLoaded', () => {
     const video = document.getElementById('video-player');
     let hls = new Hls();
 
-    // Load Configuration
     async function loadConfig() {
         try {
             const response = await fetch('config.json');
             const data = await response.json();
-            matchData = data.matches;
-            renderFixtures();
+            matchData = data;
+            renderHome();
+            renderChannels();
         } catch (error) {
-            console.error("Error loading config:", error);
-            document.getElementById('fixture-list').innerHTML = '<div class="error">Failed to load matches. Please try again.</div>';
+            console.error("Config load error:", error);
+            document.getElementById('fixture-list').innerHTML = '<div class="error">Failed to sync with server.</div>';
         }
     }
 
-    // Render Fixture List
-    function renderFixtures() {
-        const container = document.getElementById('fixture-list');
-        container.innerHTML = '';
+    function renderHome() {
+        // 1. Render Cricket
+        const cricketContainer = document.getElementById('cricket-list');
+        cricketContainer.innerHTML = '';
+        matchData.cricket.forEach(c => {
+            const card = document.createElement('div');
+            card.className = 'cricket-card';
+            card.innerHTML = `
+                <h4>${c.match}</h4>
+                <span class="tournament">${c.tournament}</span>
+                <span class="score">${c.score}</span>
+                <div class="live-tag" style="display:inline-block">${c.status}</div>
+            `;
+            card.onclick = () => openStream(c.match, "Cricket Live", c.stream);
+            cricketContainer.appendChild(card);
+        });
 
-        matchData.forEach(match => {
+        // 2. Render Fixtures
+        const fixtureList = document.getElementById('fixture-list');
+        fixtureList.innerHTML = '';
+        matchData.matches.forEach(m => {
+            const isLive = m.status === 'live';
             const card = document.createElement('div');
             card.className = 'match-card';
-            
-            const isLive = match.status === 'live';
-            const timeStr = isLive ? 'LIVE' : formatTime(match.startTime);
-
             card.innerHTML = `
                 <div class="match-header">
-                    <span>${match.group}</span>
-                    <span>${isLive ? '<span class="live-badge">LIVE</span>' : 'Upcoming'}</span>
+                    <span>${m.group}</span>
+                    <span>${isLive ? '<span class="live-tag">LIVE</span>' : 'Upcoming'}</span>
                 </div>
                 <div class="match-main">
                     <div class="team">
-                        <img src="${match.flagA}" alt="${match.teamA}">
-                        <span>${match.teamA}</span>
+                        <img src="${m.flagA}" alt="${m.teamA}">
+                        <span>${m.teamA}</span>
                     </div>
                     <div class="match-status">
-                        <div class="time">${timeStr}</div>
+                        <span class="time">${isLive ? 'LIVE' : formatTime(m.startTime)}</span>
                     </div>
                     <div class="team">
-                        <img src="${match.flagB}" alt="${match.teamB}">
-                        <span>${match.teamB}</span>
+                        <img src="${m.flagB}" alt="${m.teamB}">
+                        <span>${m.teamB}</span>
                     </div>
                 </div>
             `;
-
-            card.onclick = () => openStream(match);
-            container.appendChild(card);
+            card.onclick = () => openStream(`${m.teamA} vs ${m.teamB}`, m.group, m.streams.HD);
+            fixtureList.appendChild(card);
         });
     }
 
-    function formatTime(isoString) {
-        const date = new Date(isoString);
-        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    function renderChannels() {
+        const container = document.getElementById('channels-container');
+        container.innerHTML = '';
+        
+        for (const [category, channels] of Object.entries(matchData.channels)) {
+            const catDiv = document.createElement('div');
+            catDiv.className = 'channel-cat';
+            catDiv.innerHTML = `<div class="cat-title">${category}</div>`;
+            
+            const grid = document.createElement('div');
+            grid.className = 'channel-grid';
+            
+            channels.forEach(ch => {
+                const item = document.createElement('div');
+                item.className = 'channel-item';
+                item.innerHTML = `
+                    <img src="${ch.logo}" alt="${ch.name}">
+                    <span>${ch.name}</span>
+                `;
+                item.onclick = () => openStream(ch.name, category, ch.url);
+                grid.appendChild(item);
+            });
+            
+            catDiv.appendChild(grid);
+            container.appendChild(catDiv);
+        }
     }
 
-    // Navigation Logic
+    function formatTime(iso) {
+        return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
     window.navigateTo = (pageId) => {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(pageId).classList.add('active');
         
         document.querySelectorAll('.nav-item').forEach(item => {
             item.classList.remove('active');
-            if(item.getAttribute('data-page') === pageId) item.classList.add('active');
+            if(item.dataset.page === pageId) item.classList.add('active');
         });
 
-        if (pageId !== 'stream-section') {
-            video.pause();
-        }
+        if (pageId !== 'stream-section') video.pause();
     };
 
-    // Video Player Logic
-    function openStream(match) {
-        currentMatch = match;
+    function openStream(title, group, url) {
         navigateTo('stream-section');
+        document.getElementById('current-match-title').innerText = title;
+        document.getElementById('current-match-group').innerText = group;
         
-        document.getElementById('current-match-title').innerText = `${match.teamA} vs ${match.teamB}`;
-        document.getElementById('current-match-group').innerText = match.group;
-        
-        // Set initial quality to HD
-        switchQuality('HD');
-    }
-
-    window.switchQuality = (quality) => {
-        if (!currentMatch) return;
-        
-        const streamUrl = currentMatch.streams[quality];
-        if (!streamUrl) {
-            alert("This quality is currently unavailable.");
+        if (!url) {
+            alert("Stream link is currently unavailable. Please try again later.");
+            navigateTo('home-section');
             return;
         }
+        
+        playHls(url);
+    }
 
-        // Update active button UI
-        document.querySelectorAll('.q-btn').forEach(btn => {
-            btn.classList.remove('active');
-            if(btn.getAttribute('data-quality') === quality) btn.classList.add('active');
-        });
-
-        // Load HLS stream
+    function playHls(url) {
         if (Hls.isSupported()) {
             hls.destroy();
             hls = new Hls();
-            hls.loadSource(streamUrl);
+            hls.loadSource(url);
             hls.attachMedia(video);
-            hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                video.play();
-            });
+            hls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
         } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            video.src = streamUrl;
+            video.src = url;
             video.play();
         }
-    };
+    }
 
-    // Bind Quality Buttons
     document.querySelectorAll('.q-btn').forEach(btn => {
-        btn.onclick = () => switchQuality(btn.getAttribute('data-quality'));
+        btn.onclick = () => {
+            document.querySelectorAll('.q-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            // For this demo, we use the same stream, but in production, 
+            // you would fetch the specific quality URL from config.json
+        };
     });
 
-    // PiP and Fullscreen
     document.getElementById('pip-btn').onclick = async () => {
         try {
-            if (document.pictureInPictureElement) {
-                await document.exitPictureInPicture();
-            } else {
-                await video.requestPictureInPicture();
-            }
-        } catch (err) {
-            alert("PiP not supported in this browser.");
-        }
+            if (document.pictureInPictureElement) await document.exitPictureInPicture();
+            else await video.requestPictureInPicture();
+        } catch (e) { alert("PiP not supported"); }
     };
 
     document.getElementById('fullscreen-btn').onclick = () => {
-        if (video.requestFullscreen) {
-            video.requestFullscreen();
-        } else if (video.webkitRequestFullscreen) {
-            video.webkitRequestFullscreen();
-        }
+        if (video.requestFullscreen) video.requestFullscreen();
+        else if (video.webkitRequestFullscreen) video.webkitRequestFullscreen();
     };
 
     loadConfig();

@@ -1,4 +1,5 @@
 {
+  "appName": "WorldCup 2026 Premium",
   "matches": [
     {
       "id": "m1",
@@ -24,30 +25,41 @@
       "group": "Group C",
       "startTime": "2026-06-12T20:00:00Z",
       "status": "upcoming",
-      "streams": {
-        "HD": "",
-        "LIVE1": "",
-        "SD": ""
-      }
-    },
-    {
-      "id": "m3",
-      "teamA": "Brazil",
-      "teamB": "Morocco",
-      "flagA": "https://flagcdn.com/w80/br.png",
-      "flagB": "https://flagcdn.com/w80/ma.png",
-      "group": "Group J",
-      "startTime": "2026-06-13T14:00:00Z",
-      "status": "upcoming",
-      "streams": {
-        "HD": "",
-        "LIVE1": "",
-        "SD": ""
-      }
+      "streams": { "HD": "", "LIVE1": "", "SD": "" }
     }
   ],
-  "settings": {
-    "appName": "WorldCup 2026 Live",
-    "maintenanceMode": false
+  "cricket": [
+    {
+      "id": "c1",
+      "match": "India vs Australia",
+      "tournament": "World Test Championship",
+      "score": "IND 245/3 (62.1)",
+      "status": "LIVE",
+      "stream": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
+    },
+    {
+      "id": "c2",
+      "match": "England vs South Africa",
+      "tournament": "T20 Series",
+      "score": "ENG 120/2 (15.0)",
+      "status": "LIVE",
+      "stream": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
+    }
+  ],
+  "channels": {
+    "Sports": [
+      { "name": "ESPN Premium", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
+      { "name": "Sky Sports", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
+      { "name": "Fox Sports", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
+    ],
+    "News": [
+      { "name": "BBC World News", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
+      { "name": "CNN International", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
+      { "name": "Al Jazeera", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
+    ],
+    "Entertainment": [
+      { "name": "HBO Max Live", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
+      { "name": "Netflix Live Events", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
+    ]
   }
 }
