@@ -11,9 +11,9 @@
       "startTime": "2026-06-11T18:00:00Z",
       "status": "live",
       "streams": {
-        "HD": "https://dice-streams.com/live/sports1.m3u8",
-        "LIVE1": "https://dice-streams.com/live/sports1.m3u8",
-        "SD": "https://dice-streams.com/live/sports1_sd.m3u8"
+        "HD": "https://iptv-org.github.io/iptv/channels/sports.m3u8",
+        "LIVE1": "https://iptv-org.github.io/iptv/channels/sports.m3u8",
+        "SD": "https://iptv-org.github.io/iptv/channels/sports.m3u8"
       }
     }
   ],
@@ -24,7 +24,7 @@
       "tournament": "T20 International",
       "score": "IND 185/4 (20.0)",
       "status": "LIVE",
-      "stream": "https://stream.live-sports.net/cricket1.m3u8"
+      "stream": "https://iptv-org.github.io/iptv/channels/sports.m3u8"
     },
     {
       "id": "c2",
@@ -32,23 +32,23 @@
       "tournament": "ODI Series",
       "score": "ENG 112/2 (24.3)",
       "status": "LIVE",
-      "stream": "https://stream.live-sports.net/cricket2.m3u8"
+      "stream": "https://iptv-org.github.io/iptv/channels/sports.m3u8"
     }
   ],
   "channels": {
     "Live Sports": [
-      { "name": "Sky Sports Main", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://iptv-org.github.io/iptv/channels/sports.m3u8" },
+      { "name": "Sky Sports", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://iptv-org.github.io/iptv/channels/sports.m3u8" },
       { "name": "ESPN Live", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://iptv-org.github.io/iptv/channels/sports.m3u8" },
       { "name": "Fox Sports", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://iptv-org.github.io/iptv/channels/sports.m3u8" }
     ],
-    "World News": [
+    "Global News": [
       { "name": "BBC World", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://iptv-org.github.io/iptv/channels/news.m3u8" },
-      { "name": "Al Jazeera", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://iptv-org.github.io/iptv/channels/news.m3u8" },
-      { "name": "France 24", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://iptv-org.github.io/iptv/channels/news.m3u8" }
+      { "name": "France 24", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://iptv-org.github.io/iptv/channels/news.m3u8" },
+      { "name": "Al Jazeera", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://iptv-org.github.io/iptv/channels/news.m3u8" }
     ],
-    "Premium OTT": [
-      { "name": "Disney Live", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://iptv-org.github.io/iptv/channels/entertainment.m3u8" },
-      { "name": "HBO Max", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://iptv-org.github.io/iptv/channels/entertainment.m3u8" }
+    "Premium Entertainment": [
+      { "name": "Entertainment One", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://iptv-org.github.io/iptv/channels/entertainment.m3u8" },
+      { "name": "Global Cinema", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://iptv-org.github.io/iptv/channels/entertainment.m3u8" }
     ]
   }
 }

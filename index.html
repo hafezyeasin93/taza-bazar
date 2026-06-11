@@ -31,16 +31,15 @@
                     <i class="fas fa-baseball-bat-ball"></i>
                 </div>
                 <div id="cricket-list" class="cricket-container">
-                    <div class="loading">Fetching Live Scores...</div>
+                    <div class="loading">Loading Live Streams...</div>
                 </div>
             </div>
-
             <div class="section-title">
                 <h2>World Cup Center</h2>
                 <p>Official 2026 Match Schedule</p>
             </div>
             <div id="fixture-list" class="fixture-list">
-                <div class="loading">Syncing fixtures...</div>
+                <div class="loading">Syncing...</div>
             </div>
         </section>
 
@@ -63,34 +62,12 @@
             </div>
             <div class="settings-list">
                 <div class="setting-item">
-                    <div class="set-info">
-                        <i class="fas fa-video"></i>
-                        <span>Default Quality</span>
-                    </div>
-                    <select class="set-select">
-                        <option>HD (Auto)</option>
-                        <option>SD (Data Saver)</option>
-                    </select>
+                    <div class="set-info"><i class="fas fa-video"></i><span>Quality</span></div>
+                    <select class="set-select"><option>HD</option><option>SD</option></select>
                 </div>
                 <div class="setting-item">
-                    <div class="set-info">
-                        <i class="fas fa-bell"></i>
-                        <span>Match Notifications</span>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" checked>
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-                <div class="setting-item">
-                    <div class="set-info">
-                        <i class="fas fa-moon"></i>
-                        <span>Dark Mode</span>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" checked>
-                        <span class="slider round"></span>
-                    </label>
+                    <div class="set-info"><i class="fas fa-bell"></i><span>Notifications</span></div>
+                    <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
                 </div>
             </div>
         </section>
@@ -104,13 +81,12 @@
                 </div>
                 <div class="player-controls">
                     <div class="match-info">
-                        <h3 id="current-match-title">Stream loading...</h3>
-                        <span id="current-match-group">Loading channel...</span>
+                        <h3 id="current-match-title">Connecting...</h3>
+                        <span id="current-match-group">Loading...</span>
                     </div>
                     <div class="quality-selector">
-                        <button class="q-btn active" data-quality="HD">HD LIVE</button>
-                        <button class="q-btn" data-quality="LIVE1">LIVE 1</button>
-                        <button class="q-btn" data-quality="SD">LIVE SD</button>
+                        <button class="q-btn active" data-quality="HD">HD</button>
+                        <button class="q-btn" data-quality="SD">SD</button>
                     </div>
                 </div>
                 <div class="player-actions">
@@ -118,22 +94,22 @@
                     <button id="fullscreen-btn"><i class="fas fa-expand"></i> Fullscreen</button>
                 </div>
             </div>
-            <button class="back-btn" id="back-to-home">
+            <button class="back-btn" id="btn-back-home">
                 <i class="fas fa-arrow-left"></i> Back to Dashboard
             </button>
         </section>
     </main>
 
     <nav class="bottom-nav">
-        <div class="nav-item active" id="nav-home">
+        <div class="nav-item active" id="btn-nav-home">
             <i class="fas fa-home"></i>
             <span>Home</span>
         </div>
-        <div class="nav-item" id="nav-channels">
+        <div class="nav-item" id="btn-nav-channels">
             <i class="fas fa-tv"></i>
             <span>Channels</span>
         </div>
-        <div class="nav-item" id="nav-settings">
+        <div class="nav-item" id="btn-nav-settings">
             <i class="fas fa-cog"></i>
             <span>Settings</span>
         </div>
