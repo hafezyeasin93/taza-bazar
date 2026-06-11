@@ -1,5 +1,5 @@
 {
-  "appName": "WorldCup 2026 Premium",
+  "appName": "WorldCup 2026 Ultra Premium",
   "matches": [
     {
       "id": "m1",
@@ -11,55 +11,44 @@
       "startTime": "2026-06-11T18:00:00Z",
       "status": "live",
       "streams": {
-        "HD": "https://demo.unified-streaming.com/k8s/features/stable/video/index.m3u8",
-        "LIVE1": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
-        "SD": "https://demo.unified-streaming.com/k8s/features/stable/video/index.m3u8"
+        "HD": "https://dice-streams.com/live/sports1.m3u8",
+        "LIVE1": "https://dice-streams.com/live/sports1.m3u8",
+        "SD": "https://dice-streams.com/live/sports1_sd.m3u8"
       }
-    },
-    {
-      "id": "m2",
-      "teamA": "Argentina",
-      "teamB": "France",
-      "flagA": "https://flagcdn.com/w80/ar.png",
-      "flagB": "https://flagcdn.com/w80/fr.png",
-      "group": "Group C",
-      "startTime": "2026-06-12T20:00:00Z",
-      "status": "upcoming",
-      "streams": { "HD": "", "LIVE1": "", "SD": "" }
     }
   ],
   "cricket": [
     {
       "id": "c1",
       "match": "India vs Australia",
-      "tournament": "ICC World Test Championship",
-      "score": "IND 245/3 (62.1)",
+      "tournament": "T20 International",
+      "score": "IND 185/4 (20.0)",
       "status": "LIVE",
-      "stream": "https://demo.unified-streaming.com/k8s/features/stable/video/index.m3u8"
+      "stream": "https://stream.live-sports.net/cricket1.m3u8"
     },
     {
       "id": "c2",
-      "match": "England vs South Africa",
-      "tournament": "International T20",
-      "score": "ENG 120/2 (15.0)",
+      "match": "England vs Pakistan",
+      "tournament": "ODI Series",
+      "score": "ENG 112/2 (24.3)",
       "status": "LIVE",
-      "stream": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
+      "stream": "https://stream.live-sports.net/cricket2.m3u8"
     }
   ],
   "channels": {
-    "Sports": [
-      { "name": "ESPN Premium", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://demo.unified-streaming.com/k8s/features/stable/video/index.m3u8" },
-      { "name": "Sky Sports Live", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-      { "name": "Fox Sports HD", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://demo.unified-streaming.com/k8s/features/stable/video/index.m3u8" }
+    "Live Sports": [
+      { "name": "Sky Sports Main", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://iptv-org.github.io/iptv/channels/sports.m3u8" },
+      { "name": "ESPN Live", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://iptv-org.github.io/iptv/channels/sports.m3u8" },
+      { "name": "Fox Sports", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://iptv-org.github.io/iptv/channels/sports.m3u8" }
     ],
-    "OTT Networks": [
-      { "name": "Disney+ Hotstar", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-      { "name": "SonyLiv Premium", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://demo.unified-streaming.com/k8s/features/stable/video/index.m3u8" },
-      { "name": "JioCinema Live", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
+    "World News": [
+      { "name": "BBC World", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://iptv-org.github.io/iptv/channels/news.m3u8" },
+      { "name": "Al Jazeera", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://iptv-org.github.io/iptv/channels/news.m3u8" },
+      { "name": "France 24", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://iptv-org.github.io/iptv/channels/news.m3u8" }
     ],
-    "Global News": [
-      { "name": "BBC World", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://demo.unified-streaming.com/k8s/features/stable/video/index.m3u8" },
-      { "name": "CNN Live", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
+    "Premium OTT": [
+      { "name": "Disney Live", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://iptv-org.github.io/iptv/channels/entertainment.m3u8" },
+      { "name": "HBO Max", "logo": "https://cdn-icons-png.flaticon.com/512/53/53283.png", "url": "https://iptv-org.github.io/iptv/channels/entertainment.m3u8" }
     ]
   }
 }
