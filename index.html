@@ -1,120 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WorldCup 2026 - Ultra Premium OTT</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorldCup 2026 Ultra Premium</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#39FF14">
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-
     <header class="app-header">
-        <div class="logo">
-            <span class="gold-text">WORLD</span><span class="neon-text">CUP</span> <small>2026</small>
-        </div>
-        <div class="header-icons">
-            <i class="fas fa-bell notification-bell"></i>
-            <i class="fas fa-user-circle"></i>
-        </div>
+        <h1>WorldCup Center 2026</h1>
+        <div class="live-ticker"><span class="pulse-icon"></span> <strong>LIVE:</strong> Bangladesh vs Australia</div>
     </header>
-
-    <main id="app-content">
-        <!-- HOME SECTION -->
-        <section id="home-section" class="page active">
-            <div class="premium-banner">
-                <div class="banner-header">
-                    <span class="live-tag">CRICKET LIVE</span>
-                    <i class="fas fa-baseball-bat-ball"></i>
-                </div>
-                <div id="cricket-list" class="cricket-container">
-                    <div class="loading">Loading Live Streams...</div>
-                </div>
-            </div>
-            <div class="section-title">
-                <h2>World Cup Center</h2>
-                <p>Official 2026 Match Schedule</p>
-            </div>
-            <div id="fixture-list" class="fixture-list">
-                <div class="loading">Syncing...</div>
-            </div>
-        </section>
-
-        <!-- CHANNELS SECTION -->
-        <section id="channels-section" class="page">
-            <div class="section-title">
-                <h2>OTT & TV Directory</h2>
-                <p>Premium Global Streaming Channels</p>
-            </div>
-            <div id="channels-container" class="channels-container">
-                <div class="loading">Loading directory...</div>
-            </div>
-        </section>
-
-        <!-- SETTINGS SECTION -->
-        <section id="settings-section" class="page">
-            <div class="section-title">
-                <h2>App Settings</h2>
-                <p>Manage your experience</p>
-            </div>
-            <div class="settings-list">
-                <div class="setting-item">
-                    <div class="set-info"><i class="fas fa-video"></i><span>Quality</span></div>
-                    <select class="set-select"><option>HD</option><option>SD</option></select>
-                </div>
-                <div class="setting-item">
-                    <div class="set-info"><i class="fas fa-bell"></i><span>Notifications</span></div>
-                    <label class="switch"><input type="checkbox" checked><span class="slider round"></span></label>
-                </div>
-            </div>
-        </section>
-
-        <!-- PLAYER SECTION -->
-        <section id="stream-section" class="page">
+    <main class="main-container">
+        <section id="home-page" class="app-page active">
             <div class="player-container">
-                <div class="video-wrapper">
-                    <video id="video-player" controls playsinline></video>
-                    <div id="live-overlay" class="live-overlay">LIVE</div>
-                </div>
-                <div class="player-controls">
-                    <div class="match-info">
-                        <h3 id="current-match-title">Connecting...</h3>
-                        <span id="current-match-group">Loading...</span>
-                    </div>
-                    <div class="quality-selector">
-                        <button class="q-btn active" data-quality="HD">HD</button>
-                        <button class="q-btn" data-quality="SD">SD</button>
-                    </div>
-                </div>
-                <div class="player-actions">
-                    <button id="pip-btn"><i class="fas fa-external-link-alt"></i> PiP</button>
-                    <button id="fullscreen-btn"><i class="fas fa-expand"></i> Fullscreen</button>
+                <video id="live-player" controls poster="https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&amp;w=1000"></video>
+                <div class="player-info">
+                    <h2 id="now-playing-title">লাইভ ক্রিকেট ড্যাশবোর্ড</h2>
+                    <p id="now-playing-desc">নিচের চ্যানেল বাটন থেকে যেকোনো একটি লাইভ ম্যাচ বা টিভি চ্যানেল সিলেক্ট করুন।</p>
                 </div>
             </div>
-            <button class="back-btn" id="btn-back-home">
-                <i class="fas fa-arrow-left"></i> Back to Dashboard
-            </button>
+        </section>
+        <section id="channels-page" class="app-page">
+            <h2>📺 গ্লোবাল ওটিটি ও স্পোর্টস চ্যানেল</h2>
+            <div class="channel-grid">
+                <button class="channel-card sports" onclick="playStream('https://moctobpl.com/live/t-sports/playlist.m3u8', 'T-Sports Live', 'বাংলাদেশ বনাম অস্ট্রেলিয়া লাইভ ম্যাচ')">
+                    <span class="channel-logo">🏏</span>
+                    <div class="channel-details"><h3>T-Sports (Cricket Live)</h3><p>লাইভ ক্রিকেট ম্যাচ ১</p></div>
+                </button>
+                <button class="channel-card sports" onclick="playStream('https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&amp;iu=/124319096/external/single_ad_samples&amp;ciu_szs=300x250&amp;impl=s&amp;gdfp_req=1&amp;env=vp&amp;output=vast&amp;unviewed_position_start=1&amp;cust_params=deployment%3Ddevsite%26sample_ct%3Dlinear&amp;correlator=', 'Willow TV HD', 'আন্তর্জাতিক ক্রিকেট ও লাইভ ইভেন্ট')">
+                    <span class="channel-logo">⚽</span>
+                    <div class="channel-details"><h3>Willow TV (Sports HD)</h3><p>লাইভ ক্রিকেট ম্যাচ ২</p></div>
+                </button>
+                <button class="channel-card news" onclick="playStream('https://bppltv.akamaized.net/hls/live/2012351/somoy/index.m3u8', 'Somoy TV Live', 'সর্বশেষ খবরাখবর এবং লাইভ স্পোর্টস আপডেট')">
+                    <span class="channel-logo">📰</span>
+                    <div class="channel-details"><h3>Somoy News TV</h3><p>লাইভ ওটিটি নিউজ</p></div>
+                </button>
+                <button class="channel-card news" onclick="playStream('https://ch-1.bdixsports.com/live/stream.m3u8', 'Sony Sports 1', 'বিশ্বকাপ ২০২৬ এক্সক্লুসিভ কাভারেজ')">
+                    <span class="channel-logo">📺</span>
+                    <div class="channel-details"><h3>Sony Sports Network</h3><p>গ্লোবাল স্পোর্টস ওটিটি</p></div>
+                </button>
+            </div>
+        </section>
+        <section id="settings-page" class="app-page">
+            <h2>⚙️ অ্যাপ সেটিংস</h2>
+            <div class="settings-box">
+                <p><strong>অ্যাপ ভার্সন:</strong> v2.0.0 (Ultra Premium)</p>
+                <p><strong>সার্ভার স্ট্যাটাস:</strong> <span style="color: #39FF14;">অনলাইন (সচল)</span></p>
+                <button class="btn-refresh" onclick="window.location.reload();">অ্যাপ রিফ্রেশ করুন</button>
+            </div>
         </section>
     </main>
-
     <nav class="bottom-nav">
-        <div class="nav-item active" id="btn-nav-home">
-            <i class="fas fa-home"></i>
-            <span>Home</span>
-        </div>
-        <div class="nav-item" id="btn-nav-channels">
-            <i class="fas fa-tv"></i>
-            <span>Channels</span>
-        </div>
-        <div class="nav-item" id="btn-nav-settings">
-            <i class="fas fa-cog"></i>
-            <span>Settings</span>
-        </div>
+        <button id="btn-home" class="nav-item active" onclick="switchPage('home-page', this)"><span class="nav-icon">🏠</span><span class="nav-text">হোম প্লেয়ার</span></button>
+        <button id="btn-channels" class="nav-item" onclick="switchPage('channels-page', this)"><span class="nav-icon">📺</span><span class="nav-text">চ্যানেলসমূহ</span></button>
+        <button id="btn-settings" class="nav-item" onclick="switchPage('settings-page', this)"><span class="nav-icon">⚙️</span><span class="nav-text">সেটিংস</span></button>
     </nav>
-
-    <script src="js/script.js"></script>
 </body>
 </html>
